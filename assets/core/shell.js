@@ -60,7 +60,7 @@
       '<a class="nav-keep' + on('cases') + '" href="#/cases">案例库</a>' +
       '<a class="nav-keep' + on('guide') + '" href="#/guide">接入指南</a>' +
       '<a class="nav-keep' + on('admin') + '" href="#/admin">' + (Admin.loggedIn() ? '管理后台' : '管理') + '</a>' +
-      '<span class="live-status"><i></i>系统运行中 · <b id="live-clock">--:--:--</b></span>' +
+      '<span class="live-status"><i></i>' + Cases.stats().registered + ' 案例已载入 · <b id="live-clock">--:--:--</b></span>' +
       '<button class="nav-add" data-import>＋ 添加案例</button>' +
       '</nav></div></header>';
   }
@@ -108,157 +108,272 @@
   function stageBar(stageId) {
     var counts = A.countByStageMethod()[stageId];
     var keys = Object.keys(counts).filter(function (k) { return counts[k] > 0; });
-    if (!keys.length) return '<div class="step-bar"><i class="empty"></i></div>';
-    return '<div class="step-bar">' + keys.map(function (k) {
+    if (!keys.length) return '<div class="sb2"><i class="empty"></i></div>';
+    return '<div class="sb2" title="' + keys.map(function (k) {
+      return M[k].abbr + ' ×' + counts[k];
+    }).join('　') + '">' + keys.map(function (k) {
       var ck = (M[k] && (M[k].colorKey || k)) || 'cv';
       return '<i style="flex:' + counts[k] + ';background:var(--c-' + ck + ')"></i>';
     }).join('') + '</div>';
   }
 
+  /* ---------- 首页 V2：方法图谱小图形（五类各一枚，统一线条风） ---------- */
+  function motifCV() {
+    return '<svg class="motif" viewBox="0 0 52 38" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4">' +
+      '<rect x="3" y="3" width="46" height="32" rx="3" stroke-opacity=".55"/>' +
+      '<path d="M7 27 L17 15 L24 22 L31 12 L45 26" stroke-width="1.6"/>' +
+      '<rect class="an-scan" x="20" y="8" width="17" height="12" rx="2" stroke-dasharray="3 2" stroke-width="1.2"/>' +
+      '<circle cx="21.5" cy="9.5" r="1.3" fill="currentColor" stroke="none"/>' +
+      '<path d="M8 8 h5 M8 8 v5 M44 30 h-5 M44 30 v-5" stroke-width="1.2" stroke-opacity=".8"/></g></svg>';
+  }
+  function motifTS() {
+    return '<svg class="motif" viewBox="0 0 52 38" aria-hidden="true"><g fill="none" stroke="currentColor">' +
+      '<path d="M6 32 H48 M6 32 V5" stroke-width="1.2" stroke-opacity=".45"/>' +
+      '<path class="an-draw" d="M7 26 L13 22 L18 25 L24 16 L30 19 L36 10" stroke-width="1.7"/>' +
+      '<path d="M36 10 L42 7 L48 5" stroke-width="1.4" stroke-dasharray="3 2.5" class="an-draw2"/>' +
+      '<path d="M36 10 L42 13 L48 12 L48 5 L42 7 Z" fill="currentColor" fill-opacity=".12" stroke="none"/>' +
+      '<circle cx="36" cy="10" r="2" fill="currentColor" stroke="none"/></g></svg>';
+  }
+  function motifNLP() {
+    return '<svg class="motif" viewBox="0 0 52 38" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3">' +
+      '<rect x="6" y="6" width="40" height="26" rx="3" stroke-opacity=".5"/>' +
+      '<path d="M11 12 h22 M11 17 h30 M11 22 h16" stroke-opacity=".7"/>' +
+      '<rect class="an-tok" x="26" y="10.5" width="7" height="3.6" rx="1" fill="currentColor" fill-opacity=".55" stroke="none"/>' +
+      '<rect class="an-tok2" x="27" y="15.5" width="10" height="3.6" rx="1" fill="currentColor" fill-opacity=".55" stroke="none"/>' +
+      '<path class="an-arc" d="M29.5 10 Q22 2 32 15.5" stroke-dasharray="2.5 2" stroke-width="1.1"/></g></svg>';
+  }
+  function motifOPT() {
+    return '<svg class="motif" viewBox="0 0 52 38" aria-hidden="true"><g fill="none" stroke="currentColor">' +
+      '<ellipse cx="26" cy="19" rx="21" ry="14" stroke-width="1" stroke-opacity=".35"/>' +
+      '<ellipse cx="26" cy="19" rx="14" ry="9" stroke-width="1.1" stroke-opacity=".55"/>' +
+      '<ellipse cx="26" cy="19" rx="7" ry="4.4" stroke-width="1.2" stroke-opacity=".8"/>' +
+      '<path class="an-path" d="M5 33 Q14 30 20 24 T28 16 Q33 11 26 19" stroke-width="1.5" stroke-dasharray="26 26"/>' +
+      '<circle cx="26" cy="19" r="2.2" fill="currentColor" stroke="none"/></g></svg>';
+  }
+  function motifKG() {
+    return '<svg class="motif" viewBox="0 0 52 38" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1">' +
+      '<path d="M10 10 L26 19 L42 10 M10 28 L26 19 L42 28 M10 10 L10 28 M42 10 L42 28 M26 5 L26 19 M26 5 L10 10 M26 5 L42 10" stroke-opacity=".6"/>' +
+      '<circle cx="10" cy="10" r="3" fill="currentColor" fill-opacity=".35"/><circle cx="42" cy="10" r="3" fill="currentColor" fill-opacity=".35"/>' +
+      '<circle cx="10" cy="28" r="3" fill="currentColor" fill-opacity=".35"/><circle cx="42" cy="28" r="3" fill="currentColor" fill-opacity=".35"/>' +
+      '<circle cx="26" cy="5" r="2.6" fill="currentColor" fill-opacity=".35"/>' +
+      '<circle class="an-core" cx="26" cy="19" r="4" fill="currentColor" stroke="none"/></g></svg>';
+  }
+  var MOTIFS = { cv: motifCV, ts: motifTS, nlp: motifNLP, opt: motifOPT, kg: motifKG };
+  function motifFor(k) { return (MOTIFS[k] || motifCV)(); }
+
   /* =========================================================
-     三、首页
+     三、首页 V2 —— 工业科技展馆式总览
      ========================================================= */
+
+  /* 工业全景带：地震采集 → 钻井 → 储层 → 集输 → 加工，数据总线贯穿 */
+  function panoramaSVG() {
+    return '<svg class="pano" viewBox="0 0 1440 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="从地震采集到炼化的工业全景示意">' +
+      '<defs><clipPath id="pgnd"><rect x="0" y="66" width="1440" height="106"/></clipPath></defs>' +
+      /* 地层：三条缓波状带 */
+      '<g clip-path="url(#pgnd)">' +
+      '<path d="M0 92 Q 180 84 360 90 T 720 88 T 1080 92 T 1440 86 V172 H0 Z" fill="#e9eef6"/>' +
+      '<path d="M0 114 Q 200 106 400 112 T 800 110 T 1200 114 T 1440 108 V172 H0 Z" fill="#dfe6f0"/>' +
+      '<path d="M0 136 Q 220 128 440 134 T 880 132 T 1280 136 T 1440 130 V172 H0 Z" fill="#d5deeb"/>' +
+      /* 储层透镜体 */
+      '<path d="M560 128 Q 680 106 800 128 Q 680 146 560 128 Z" fill="#c46a2b" fill-opacity=".22" stroke="#c46a2b" stroke-width="1.1"/>' +
+      '<path d="M600 133 Q 680 121 760 133 Q 680 141 600 133 Z" fill="#c46a2b" fill-opacity=".3"/>' +
+      '</g>' +
+      /* 地表线 */
+      '<line x1="0" y1="66" x2="1440" y2="66" stroke="#b6c4d6" stroke-width="1.4"/>' +
+      /* 左：地震采集（震源 + 波前弧 + 检波器） */
+      '<g stroke="#0e8a9e" fill="none" stroke-width="1.3">' +
+      '<path class="pw1" d="M120 66 Q 96 88 120 104 Q 144 88 120 66"/>' +
+      '<path class="pw2" d="M120 66 Q 76 96 120 122 Q 164 96 120 66"/>' +
+      '<path class="pw3" d="M120 66 Q 56 104 120 140 Q 184 104 120 66"/>' +
+      '</g>' +
+      '<rect x="104" y="46" width="30" height="14" rx="3" fill="#0e8a9e" fill-opacity=".18" stroke="#0e8a9e" stroke-width="1.2"/>' +
+      '<circle cx="112" cy="63" r="1.6" fill="#0e8a9e"/><circle cx="120" cy="63" r="1.6" fill="#0e8a9e"/><circle cx="128" cy="63" r="1.6" fill="#0e8a9e"/>' +
+      /* 中：钻机（桁架）+ 井筒 + 射孔 */
+      '<g stroke="#154687" fill="none" stroke-width="1.5">' +
+      '<path d="M600 66 L648 8 L696 66"/>' +
+      '<path d="M612 50 L684 50 M620 34 L676 34 M630 20 L666 20"/>' +
+      '<path d="M648 8 V18"/>' +
+      '</g>' +
+      '<line x1="644" y1="66" x2="644" y2="132" stroke="#154687" stroke-width="1.6"/>' +
+      '<line x1="652" y1="66" x2="652" y2="132" stroke="#154687" stroke-width="1.6"/>' +
+      '<path d="M644 120 h-10 M652 120 h10 M644 128 h-10 M652 128 h10" stroke="#c46a2b" stroke-width="1.4"/>' +
+      /* 右：集输管线 + 泵站 + 炼化 */
+      '<path d="M652 62 H1050" stroke="#154687" stroke-width="2" fill="none"/>' +
+      '<circle cx="860" cy="62" r="7" fill="#fff" stroke="#154687" stroke-width="1.6"/>' +
+      '<path d="M856 62 h8 M860 58 v8" stroke="#154687" stroke-width="1.4"/>' +
+      '<rect x="1060" y="30" width="12" height="36" rx="2" fill="none" stroke="#154687" stroke-width="1.5"/>' +
+      '<rect x="1080" y="38" width="12" height="28" rx="2" fill="none" stroke="#154687" stroke-width="1.5"/>' +
+      '<ellipse cx="1106" cy="58" rx="14" ry="8" fill="none" stroke="#154687" stroke-width="1.5"/>' +
+      '<path d="M1066 30 V22 Q1066 14 1074 14" stroke="#c46a2b" stroke-width="1.3" fill="none"/>' +
+      /* 数据总线：地表上方虚线 + 节点 */
+      '<path class="bus" d="M120 40 H648 H860 H1100" stroke="#1e63b4" stroke-width="1.2" stroke-dasharray="5 4" fill="none"/>' +
+      '<g fill="#1e63b4">' +
+      '<circle cx="120" cy="40" r="3.4"/><circle cx="648" cy="40" r="3.4"/><circle cx="860" cy="40" r="3.4"/><circle cx="1100" cy="40" r="3.4"/>' +
+      '</g>' +
+      '<g font-family="monospace" font-size="9" fill="#5d6770">' +
+      '<text x="120" y="28" text-anchor="middle">采集</text><text x="648" y="28" text-anchor="middle">钻井</text>' +
+      '<text x="860" y="28" text-anchor="middle">集输</text><text x="1100" y="28" text-anchor="middle">加工</text></g>' +
+      '<text x="1424" y="166" font-size="8.5" fill="#8d969e" text-anchor="end" font-family="monospace">SURVEY · DRILL · PRODUCE · TRANSPORT · REFINE — 数据总线贯穿全链</text>' +
+      '</svg>';
+  }
+
   function homeHTML() {
     var s = A.stats();
     var cs = Cases.stats();
     var total = A.allScenes.length;
     var keys = Object.keys(M);
+    var tagsTotal = keys.reduce(function (a, k) { return a + (A.index.byMethod[k] || []).length; }, 0);
+    var coverPct = total ? Math.round(cs.coveredScenes / total * 100) : 0;
 
-    /* 方法构成条：一根堆叠条 + 图例，替代原先与下方方法面板重复的 5 张色块 */
+    /* ---- 右侧驾驶舱数据 ---- */
+    var diffBar = ['低', '中', '高'].map(function (d) {
+      var col = d === '低' ? 'var(--ok)' : d === '中' ? 'var(--warn)' : 'var(--bad)';
+      return '<i style="flex:' + s.diff[d] + ';background:' + col + '" title="' + d + '难度 ' + s.diff[d] + ' 个"></i>';
+    }).join('');
     var compBar = keys.map(function (k) {
       var n = (A.index.byMethod[k] || []).length;
-      return '<i style="width:' + (n / total * 100).toFixed(2) + '%;background:var(--c-' + (M[k].colorKey || k) + ')"></i>';
+      return '<i style="flex:' + n + ';background:var(--c-' + (M[k].colorKey || k) + ')" title="' + M[k].abbr + ' ' + n + ' 个场景"></i>';
     }).join('');
     var compLegend = keys.map(function (k) {
       var n = (A.index.byMethod[k] || []).length;
-      return '<a href="#/method/' + k + '"><i style="background:var(--c-' + (M[k].colorKey || k) + ')"></i>' + M[k].abbr +
-        '<b>' + n + '</b></a>';
+      return '<a href="#/method/' + k + '"><i style="background:var(--c-' + (M[k].colorKey || k) + ')"></i>' + M[k].abbr + '<b>' + n + '</b></a>';
     }).join('');
 
-    var coverPct = total ? Math.round(cs.coveredScenes / total * 100) : 0;
-    var coverBar =
-      '<i style="width:' + coverPct + '%;background:var(--jade)"></i>' +
-      '<i style="width:' + (100 - coverPct) + '%;background:var(--line)"></i>';
-
-    var diffBar =
-      '<i style="width:' + (s.diff.低 / total * 100).toFixed(2) + '%;background:var(--ok)"></i>' +
-      '<i style="width:' + (s.diff.中 / total * 100).toFixed(2) + '%;background:var(--warn)"></i>' +
-      '<i style="width:' + (s.diff.高 / total * 100).toFixed(2) + '%;background:var(--bad)"></i>';
-
-    var chain = A.stages.map(function (st) {
-      return '<a class="step" href="#/stage/' + st.id + '">' +
-        '<div class="step-idx">' + pad(st.idx) + '</div>' +
-        '<div class="step-name">' + esc(st.name) + '</div>' +
-        '<div class="step-n">' + st.scenes.length + '<span>场景</span></div>' +
+    /* ---- 流程地图：7 + 7 两行（13 环节 + 引导卡），卡间箭头 ---- */
+    function flowCard(st) {
+      return '<a class="fc" data-i="' + st.idx + '" href="#/stage/' + st.id + '">' +
+        '<div class="fc-idx mono">' + pad(st.idx) + '</div>' +
+        '<div class="fc-name">' + esc(st.name) + '</div>' +
+        '<div class="fc-n mono">' + st.scenes.length + '<span>场景</span></div>' +
         stageBar(st.id) + '</a>';
-    }).join('') +
-      '<a class="step step-all" href="#/chain">' +
-      '<div class="step-idx">VIEW ALL</div>' +
-      '<div class="step-name">完整作业链</div>' +
-      '<div class="step-n">13<span>环节 · 61 场景 →</span></div>' +
-      '</a>';
+    }
+    var sep = '<div class="fsep" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 2 L10 7 L4 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+    var rowA = A.stages.slice(0, 7).map(flowCard).join(sep);
+    var rowB = A.stages.slice(7).map(flowCard).join(sep) + sep +
+      '<a class="fc fc-all" href="#/chain"><div class="fc-idx mono">VIEW</div>' +
+      '<div class="fc-name">完整作业链</div><div class="fc-n mono">61<span>场景 →</span></div></a>';
 
-    var mcards = Object.keys(M).map(function (k) {
+    /* ---- 方法图谱卡 ---- */
+    var mcards = keys.map(function (k) {
+      var n = (A.index.byMethod[k] || []).length;
       return '<a class="mcard" data-m="' + (M[k].colorKey || k) + '" href="#/method/' + k + '">' +
-        '<div class="abbr"><b>' + M[k].abbr + '</b><span>' + esc(M[k].signal) + '</span></div>' +
+        '<div class="m-top"><span class="motif-w" style="color:var(--c-' + (M[k].colorKey || k) + ')">' + motifFor(k) + '</span>' +
+        '<span class="abbr"><b>' + M[k].abbr + '</b><span>' + esc(M[k].signal) + '</span></span></div>' +
         '<div class="nm">' + esc(M[k].name) + '</div>' +
-        '<div class="ds">' + esc(M[k].desc) + '</div>' +
-        '<div class="cnt"><b>' + (A.index.byMethod[k] || []).length + '</b>个场景</div></a>';
+        '<div class="ds">' + esc(M[k].desc).slice(0, 34) + '…</div>' +
+        '<div class="cnt"><b>' + n + '</b>个场景<span class="ar">→</span></div></a>';
+    }).join('');
+
+    /* ---- 精选案例（真实注册案例，按方法多样性挑选） ---- */
+    var FEATURED = ['pr1-dynocard', 't1-pipeline-leak', 'co4-slide-rl', 'm5-report-nlp'];
+    var feats = FEATURED.map(function (id) { return Cases.get(id); }).filter(Boolean);
+    if (feats.length < 3) feats = Cases.list().slice(0, 4);
+    var featCards = feats.map(function (c) {
+      var sc = A.index.byScene[c.sceneId] || {};
+      var m0 = (c.methods && c.methods[0]) || (sc.methods && sc.methods[0]) || 'cv';
+      var ck = (M[m0] && (M[m0].colorKey || m0)) || m0;
+      return '<a class="fcard" href="#/scene/' + c.sceneId + '?case=' + c.id + '&tab=demo">' +
+        '<span class="f-thumb" style="color:var(--c-' + ck + ')">' + motifFor(m0) + '</span>' +
+        '<span class="f-body"><b>' + esc(c.title) + '</b>' +
+        '<i>' + esc(sc.stageName || '') + ' · ' + esc(sc.name || '') + '</i>' +
+        '<em>' + c.methods.map(function (m) { return M[m] ? M[m].abbr : m.toUpperCase(); }).join(' / ') +
+        ' · v' + esc(c.version || '1.0') + ' · ready</em></span>' +
+        '<span class="f-go">运行演示 <span class="ar">→</span></span></a>';
     }).join('');
 
     return '<main>' +
-      '<section class="hero"><div class="wrap"><div class="hero-grid">' +
 
-      '<div class="hero-main">' +
+      /* ========== HERO ========== */
+      '<section class="hero"><div class="wrap"><div class="hgx">' +
+      '<div class="hgl">' +
       '<div class="hero-top rise d1">' +
-      '<span class="hero-badge">' + esc(A.meta.version) + ' · ' + total + ' 个候选场景</span>' +
-      '<span class="hero-badge alt">案例系统 · ' + cs.registered + ' 个已接入</span>' +
+      '<span class="hero-badge">' + esc(A.meta.version) + ' · 全链 ' + total + ' 个候选场景</span>' +
+      '<span class="hero-badge alt">案例系统 · ' + cs.registered + ' 个已接入</span></div>' +
+      '<h1 class="hx rise d1"><em>油链天工</em><span>石油勘探开发的智能化可能性地图</span></h1>' +
+      '<p class="hero-lead rise d2">把从<b>地质勘察</b>到<b>加工</b>的整条作业链拆成 ' + total + ' 个候选场景，逐个回答：哪一步能被算法替掉、要准备什么数据、难在哪里——每个场景都配一个<b>能在浏览器里直接运行</b>的智能化示范。</p>' +
+      '<div class="kpis rise d3">' +
+      '<div class="kpi"><b class="roll mono" data-n="' + A.stages.length + '">' + A.stages.length + '</b><span>作业环节</span></div>' +
+      '<div class="kpi"><b class="roll mono" data-n="' + total + '">' + total + '</b><span>候选场景</span></div>' +
+      '<div class="kpi"><b class="roll mono" data-n="' + cs.registered + '">' + cs.registered + '</b><span>接入案例</span></div>' +
+      '<div class="kpi"><b class="roll mono" data-n="' + keys.length + '">' + keys.length + '</b><span>类 AI 方法</span></div>' +
       '</div>' +
-      '<h1 class="rise d1"><em>油链天工</em><br>石油勘探开发的智能化可能性地图</h1>' +
-      '<p class="hero-lead rise d2">把整条作业链拆成 ' + total + ' 个候选场景，逐个说明：哪一步能被算法替掉、需要准备什么数据、难在哪里。带「可运行」标记的场景，可以直接在浏览器里跑一遍，看算法在什么条件下失效。</p>' +
-      '<div class="hero-note rise d3"><div>' +
-      '<p><b>这不是一个展示页，而是一个可扩展的系统。</b>场景元数据、案例内容、可运行示范三者分离；新增案例只需写一个插件文件并注册，外壳、导航、检索路径都会自动接上。</p>' +
-      '</div></div>' +
       '<div class="hero-acts rise d4">' +
-      '<a class="btn primary" href="#/chain">浏览完整作业链 <span class="ar">→</span></a>' +
-      '<a class="btn" href="#/scene/w1?tab=demo">看一个可运行示范</a>' +
-      '</div>' +
+      '<a class="btn primary lg" href="#/chain">浏览完整作业链 <span class="ar">→</span></a>' +
+      '<a class="btn lg" href="#/scene/pr1?tab=demo">看一个可运行示范</a></div>' +
       '</div>' +
 
-      '<aside class="spec rise d3">' +
-      '<div class="spec-h"><span class="mono">AT A GLANCE · 速览</span><span class="mono">' + esc(A.meta.version) + '</span></div>' +
-      '<div class="spec-body">' +
-      '<div class="spec-row"><span class="k">作业环节</span><span class="v">' + A.stages.length + '<small>个</small></span></div>' +
-      '<div class="spec-row"><span class="k">候选场景</span><span class="v">' + total + '<small>个</small></span></div>' +
-      '<div class="spec-row"><span class="k">难度分布（低 / 中 / 高）</span><span class="v">' + s.diff.低 + '<small>/</small>' + s.diff.中 + '<small>/</small>' + s.diff.高 + '</span></div>' +
-      '</div>' +
-      '<div class="spec-bar">' + diffBar + '</div>' +
-      '<div class="spec-body">' +
-      '<div class="spec-row"><span class="k">已接入案例</span><span class="v">' + cs.registered + '<small>个</small></span></div>' +
-      '<div class="spec-row"><span class="k">其中可运行示范</span><span class="v">' + cs.withDemo + '<small>个</small></span></div>' +
-      '<div class="spec-row"><span class="k">案例覆盖场景</span><span class="v">' + cs.coveredScenes + '<small>/ ' + total + ' · ' + coverPct + '%</small></span></div>' +
-      '</div>' +
-      '<div class="spec-bar">' + coverBar + '</div>' +
-      '<div class="spec-sub"><span class="mono">方法构成 · BY METHOD</span></div>' +
-      '<div class="comp">' +
-      '<div class="comp-bar">' + compBar + '</div>' +
-      '<div class="comp-legend">' + compLegend + '</div>' +
-      '</div>' +
-      '<div class="spec-f"><span>数据截至 2026-10</span><span>教学用途</span></div>' +
+      '<aside class="cockpit rise d3">' +
+      '<div class="cp-h"><span class="mono">DATA COCKPIT · 数据驾驶舱</span><span class="mono">' + esc(A.meta.version) + '</span></div>' +
+      '<div class="cp-block"><div class="cp-lab"><span>难度分布</span><span class="mono">低 ' + s.diff.低 + ' · 中 ' + s.diff.中 + ' · 高 ' + s.diff.高 + '</span></div>' +
+      '<div class="cp-bar">' + diffBar + '</div></div>' +
+      '<div class="cp-block"><div class="cp-lab"><span>方法构成（场景标签）</span><span class="mono">' + tagsTotal + ' 次关联</span></div>' +
+      '<div class="cp-bar">' + compBar + '</div>' +
+      '<div class="cp-leg">' + compLegend + '</div></div>' +
+      '<div class="cp-block"><div class="cp-lab"><span>案例覆盖</span><span class="mono cp-pct"><b class="roll" data-n="' + coverPct + '">' + coverPct + '</b>%</span></div>' +
+      '<div class="cp-bar"><i style="flex:' + cs.coveredScenes + ';background:var(--jade)"></i><i style="flex:' + Math.max(total - cs.coveredScenes, 0) + ';background:var(--line)"></i></div>' +
+      '<div class="cp-sub">' + cs.coveredScenes + ' / ' + total + ' 个场景已有案例 · 其中 ' + cs.withDemo + ' 个带可运行示范</div></div>' +
       '</aside>' +
+      '</div>' +
 
-      '</div></div></section>' +
+      /* 工业全景带 */
+      '<div class="pano-w rise d4">' + panoramaSVG() + '</div>' +
+      '</div></section>' +
 
-      /* 按环节找 */
+      /* ========== 01 流程地图 ========== */
       '<section class="section"><div class="wrap">' +
       '<div class="sec-head">' +
       '<div class="sec-rail"><span class="sec-num">01</span><span class="kicker">BY STAGE</span>' +
       '<span class="r"><a class="btn sm ghost" href="#/chain">完整链条 →</a></span></div>' +
-      '<h2>按环节找：我现在站在哪一步</h2>' +
-      '<p>沿着作业链从左到右，每个节点下方的色条表示该环节可用的方法构成。点进去是该环节的场景清单。</p>' +
-      '</div>' +
-      '<div class="chain-wrap"><div class="chain-scroll"><div class="chain">' + chain + '</div></div>' +
-      '<div class="chain-hint">01 地质勘察 → 13 加工 · 沿作业顺序排列 · 点击任意环节进入场景列表</div></div>' +
+      '<h2>作业链数字地图：从地质勘察到加工</h2>' +
+      '<p>13 个环节沿作业顺序两行排布，编号即工序；卡片底部的方法构成条显示该环节里五类技术的分量。点击进入场景清单。</p></div>' +
+      '<div class="flowmap rv"><div class="frow">' + rowA + '</div><div class="frow">' + rowB + '</div></div>' +
+      '<div class="chain-hint">01 地质勘察 → 13 加工 · 悬停查看方法构成 · 点击进入环节</div>' +
       '</div></section>' +
 
-      /* 按方法找 */
+      /* ========== 02 方法图谱 ========== */
       '<section class="section"><div class="wrap">' +
       '<div class="sec-head">' +
       '<div class="sec-rail"><span class="sec-num">02</span><span class="kicker">BY METHOD</span></div>' +
-      '<h2>按方法找：我手上有一套什么技术</h2>' +
-      '<p>如果你已经有一支做 CV 或时序的团队，更自然的问法是「这套技术在这行能干什么」。点进去是跨环节的场景清单。</p>' +
-      '</div>' +
-      '<div class="methods">' + mcards + '</div>' +
+      '<h2>五类 AI 技术的能力图谱</h2>' +
+      '<p>已经有一支做 CV 或时序的团队？更自然的问法是「这套技术在这行能干什么」——点进去是跨环节的场景清单。</p></div>' +
+      '<div class="methods rv">' + mcards + '</div>' +
       '</div></section>' +
 
-      /* 矩阵 */
+      /* ========== 03 热力矩阵 ========== */
       '<section class="section"><div class="wrap">' +
       '<div class="sec-head">' +
       '<div class="sec-rail"><span class="sec-num">03</span><span class="kicker">MATRIX</span></div>' +
-      '<h2>方法 × 环节：哪里已经被占满，哪里还是空白</h2>' +
-      '<p>行列交点上的数字是该环节里用到该方法的地点数量。点格子直接带筛选条件跳到环节页。</p>' +
-      '</div>' +
+      '<h2>方法 × 环节热力矩阵：哪里密集，哪里空白</h2>' +
+      '<p>颜色越深表示该环节里用到该方法的场景越多。悬停高亮行列，点击格子带筛选条件跳进环节页。</p></div>' +
       matrixHTML() +
       '</div></section>' +
 
-      /* 系统构成 */
+      /* ========== 04 精选案例 ========== */
       '<section class="section"><div class="wrap">' +
       '<div class="sec-head">' +
-      '<div class="sec-rail"><span class="sec-num">04</span><span class="kicker clay">SYSTEM</span>' +
+      '<div class="sec-rail"><span class="sec-num">04</span><span class="kicker">SHOWCASE</span>' +
+      '<span class="r"><a class="btn sm ghost" href="#/cases">案例库 →</a></span></div>' +
+      '<h2>精选案例：现在就能跑给你看</h2>' +
+      '<p>来自已注册案例库的四类代表——图像分类、时序预警、强化学习、文本生成，全部纯前端、点开即跑。</p></div>' +
+      '<div class="feat rv">' + featCards + '</div>' +
+      '</div></section>' +
+
+      /* ========== 05 系统架构 ========== */
+      '<section class="section"><div class="wrap">' +
+      '<div class="sec-head">' +
+      '<div class="sec-rail"><span class="sec-num">05</span><span class="kicker clay">SYSTEM</span>' +
       '<span class="r"><a class="btn primary sm" href="#/guide">接入指南 →</a></span></div>' +
-      '<h2>这个系统由三层组成</h2>' +
-      '<p>新增一个案例，只动第二层的一个文件，外加 index.html 里一行 script 标签。</p>' +
-      '</div>' +
-      '<div class="fields">' +
-      '<div class="field"><div class="fx">01 · DATA LAYER · assets/data.js</div>' +
-      '<h4>场景元数据</h4>' +
-      '<p>13 个环节、' + total + ' 个场景的名称、方法标签、难度、数据条件。这一层<b>不含任何案例实现</b>，只是一张可检索的表。</p></div>' +
-      '<div class="field"><div class="fx">02 · CASE LAYER · assets/cases/*.js</div>' +
-      '<h4>案例插件</h4>' +
-      '<p>每个案例一个文件，调用 <b>Cases.register()</b> 声明自己绑定的场景、三块内容与可选的 demo 挂载函数。互不引用、可单独删除。</p></div>' +
-      '<div class="field"><div class="fx">03 · SHELL · assets/core/*</div>' +
-      '<h4>外壳与组件</h4>' +
-      '<p>路由、导航、检索路径、标签/表格/四段式等组件，以及设计令牌。所有案例共用同一套版式，改一次全站生效。</p></div>' +
+      '<h2>三层系统：数据、案例、外壳</h2>' +
+      '<p>新增一个案例只动第二层的一个文件；外壳负责路由、检索与示范宿主，全站风格由设计令牌统一。</p></div>' +
+      '<div class="arch3 rv">' +
+      '<div class="al"><div class="al-x mono">01 · DATA</div><h4>场景元数据</h4>' +
+      '<p><b class="mono">' + A.stages.length + '</b> 个环节 · <b class="mono">' + total + '</b> 个场景的名称、方法标签、难度与数据条件，只是一张可检索的表。</p></div>' +
+      '<div class="al-arrow" aria-hidden="true"><svg width="26" height="14" viewBox="0 0 26 14"><path d="M0 7 H20 M16 2 L22 7 L16 12" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round"/></svg></div>' +
+      '<div class="al"><div class="al-x mono">02 · CASES</div><h4>案例插件</h4>' +
+      '<p><b class="mono">' + cs.registered + '</b> 个案例文件经 <b>Cases.register()</b> 声明式接入，互不引用、可单独增删，含上传包通道。</p></div>' +
+      '<div class="al-arrow" aria-hidden="true"><svg width="26" height="14" viewBox="0 0 26 14"><path d="M0 7 H20 M16 2 L22 7 L16 12" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round"/></svg></div>' +
+      '<div class="al"><div class="al-x mono">03 · SHELL</div><h4>外壳与组件</h4>' +
+      '<p>路由 / 导航 / 方法反查 / 示范沙箱宿主与设计令牌，所有案例共用同一套版式，改一次全站生效。</p></div>' +
       '</div>' +
       '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">' +
       '<a class="btn" href="#/cases">查看案例库与校验结果 →</a>' +
@@ -270,27 +385,55 @@
   function matrixHTML() {
     var counts = A.countByStageMethod();
     var keys = Object.keys(M);
-    var head = '<tr><th>环节</th>' + keys.map(function (k) {
-      return '<th>' + M[k].abbr + '</th>';
-    }).join('') + '<th>合计</th></tr>';
+    var total = A.allScenes.length;
+    var tagsTotal = keys.reduce(function (a, k) { return a + (A.index.byMethod[k] || []).length; }, 0);
+    var maxV = 1;
+    A.stages.forEach(function (st) { keys.forEach(function (k) { maxV = Math.max(maxV, counts[st.id][k] || 0); }); });
+    function opFor(n) { return n ? (0.14 + 0.62 * Math.sqrt(n / maxV)).toFixed(3) : 0; }
+
+    var head = '<div class="mx-hc" data-c=""><span>环节 ＼ 方法</span></div>' +
+      keys.map(function (k) {
+        var n = (A.index.byMethod[k] || []).length;
+        return '<a class="mx-h" data-c="' + k + '" href="#/method/' + k + '" title="' + esc(M[k].name) + '：' + n + ' 个场景">' +
+          '<i style="background:var(--c-' + (M[k].colorKey || k) + ')"></i><b>' + M[k].abbr + '</b><span class="mono">' + n + '</span></a>';
+      }).join('') + '<div class="mx-h mx-hh"><b>场景</b><span class="mono">' + total + '</span></div>';
 
     var body = A.stages.map(function (st) {
       var c = counts[st.id];
-      var rowTotal = st.scenes.length;
-      return '<tr><th><i>' + pad(st.idx) + '</i>' + esc(st.name) + '</th>' +
-        keys.map(function (k) {
-          var n = c[k] || 0;
-          return '<td class="' + (n ? '' : 'zero') + '"><a href="#/stage/' + st.id + '?m=' + k + '">' + (n || '·') + '</a></td>';
-        }).join('') +
-        '<td><a href="#/stage/' + st.id + '" style="color:var(--ink-3)">' + rowTotal + '</a></td></tr>';
+      var cells = keys.map(function (k) {
+        var n = c[k] || 0;
+        var pct = st.scenes.length ? Math.round(n / st.scenes.length * 100) : 0;
+        if (!n) return '<span class="mx-c mx-zero" data-r="' + st.id + '" data-c="' + k + '"><i></i><em>·</em></span>';
+        return '<a class="mx-c" data-r="' + st.id + '" data-c="' + k + '" href="#/stage/' + st.id + '?m=' + k + '"' +
+          ' title="' + esc(st.name) + ' × ' + esc(M[k].name) + '：' + n + ' 个场景">' +
+          '<i style="opacity:' + opFor(n) + '"></i>' +
+          '<span class="mx-v mono">' + n + '</span>' +
+          '<span class="mx-p mono">' + pct + '%</span></a>';
+      }).join('');
+      return '<a class="mx-r" data-r="' + st.id + '" href="#/stage/' + st.id + '"><i class="mono">' + pad(st.idx) + '</i><span>' + esc(st.name) + '</span></a>' +
+        cells +
+        '<a class="mx-c mx-t" data-r="' + st.id + '" href="#/stage/' + st.id + '"><span class="mx-v mono">' + st.scenes.length + '</span><span class="mx-p mono">100%</span></a>';
     }).join('');
 
-    var foot = '<tr><th>合计</th>' + keys.map(function (k) {
-      return '<td>' + (A.index.byMethod[k] || []).length + '</td>';
-    }).join('') + '<td>' + A.allScenes.length + '</td></tr>';
+    var foot = '<div class="mx-r mx-fr" data-r=""><span>关联合计（一景可多法）</span></div>' +
+      keys.map(function (k) {
+        return '<div class="mx-c mx-t" data-c="' + k + '"><span class="mx-v mono">' + (A.index.byMethod[k] || []).length + '</span><span class="mx-p mono">—</span></div>';
+      }).join('') +
+      '<div class="mx-c mx-t"><span class="mx-v mono">' + tagsTotal + '</span><span class="mx-p mono">—</span></div>';
 
-    return '<div class="matrix-wrap"><table class="matrix"><thead>' + head + '</thead><tbody>' + body +
-      '</tbody><tfoot>' + foot + '</tfoot></table></div>';
+    return '<div class="mxv rv" id="mxv">' +
+      '<div class="mx-tools"><div class="mx-modes" role="group" aria-label="显示模式">' +
+      '<button class="on" data-mode="v" type="button">数量</button>' +
+      '<button data-mode="p" type="button">环节内占比</button></div>' +
+      '<span class="mx-info" id="mx-info">悬停格子查看「环节 × 方法」关联 · 点击跳转筛选结果</span></div>' +
+      '<div class="mx-scroll"><div class="mx-grid" style="grid-template-columns:minmax(150px,1.6fr) repeat(5,1fr) 62px">' +
+      head + body + foot + '</div></div>' +
+      '<div class="mx-legend"><span class="mono">色阶</span>' +
+      [0, 1, Math.round(maxV / 2), maxV].map(function (v, i) {
+        return '<i><b style="opacity:' + (i ? opFor(v || 1) : 0) + '"></b>' + (i ? v : '0') + '</i>';
+      }).join('') +
+      '<span class="mx-note">口径：单元格 = 该环节中带此方法标签的<b>场景数</b>；因一景可多法，关联合计 <b class="mono">' + tagsTotal + '</b> ≥ 去重场景 <b class="mono">' + total + '</b></span></div>' +
+      '</div>';
   }
 
   /* =========================================================
@@ -1081,6 +1224,10 @@
       var targets = parts.map(function (p) { return parseInt(p, 10); });
       jobs.push({ node: node, targets: targets, sep: '/' });
     });
+    [].forEach.call(scope.querySelectorAll('.roll'), function (r) {
+      var fin = parseInt(r.getAttribute('data-n'), 10);
+      if (!isNaN(fin)) jobs.push({ node: r.firstChild, targets: [fin], sep: '/' });
+    });
     if (!jobs.length) return;
     var t0 = null, DUR = 950;
     function frame(ts) {
@@ -1093,6 +1240,63 @@
       if (k < 1) requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
+  }
+
+  /* ---------- 首页 V2 交互：流程邻卡联动 / 矩阵行列高亮与模式 / 滚动浮现 ---------- */
+  function bindReveal(scope) {
+    var els = scope.querySelectorAll('.rv');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window) || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      [].forEach.call(els, function (e) { e.classList.add('on'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('on'); io.unobserve(en.target); } });
+    }, { threshold: 0.1 });
+    [].forEach.call(els, function (e) { io.observe(e); });
+  }
+  function bindHome(view) {
+    var fcs = view.querySelectorAll('.fc[data-i]');
+    [].forEach.call(fcs, function (c) {
+      c.addEventListener('mouseenter', function () {
+        var i = +c.getAttribute('data-i');
+        [].forEach.call(fcs, function (x) {
+          x.classList.toggle('near', Math.abs(+x.getAttribute('data-i') - i) === 1);
+        });
+      });
+      c.addEventListener('mouseleave', function () {
+        [].forEach.call(fcs, function (x) { x.classList.remove('near'); });
+      });
+    });
+    var mx = view.querySelector('.mxv');
+    if (!mx) return;
+    mx.addEventListener('click', function (e) {
+      var b = e.target.closest('.mx-modes button');
+      if (!b) return;
+      e.preventDefault();
+      [].forEach.call(mx.querySelectorAll('.mx-modes button'), function (x) { x.classList.toggle('on', x === b); });
+      mx.classList.toggle('mx-pct', b.getAttribute('data-mode') === 'p');
+    });
+    var info = mx.querySelector('#mx-info');
+    var def = info ? info.textContent : '';
+    mx.addEventListener('mouseover', function (e) {
+      var c = e.target.closest('.mx-c, .mx-h, .mx-r');
+      if (!c) return;
+      var r = c.getAttribute('data-r'), cc = c.getAttribute('data-c');
+      [].forEach.call(mx.querySelectorAll('[data-r],[data-c]'), function (x) {
+        var xr = x.getAttribute('data-r'), xc = x.getAttribute('data-c');
+        x.classList.toggle('hl', !!((r && xr === r) || (cc && xc === cc)));
+      });
+      if (info && c.classList.contains('mx-c') && r && cc) {
+        var st = A.index.byStage[r];
+        var v = c.querySelector('.mx-v');
+        info.textContent = (st ? st.name : '') + ' × ' + (M[cc] ? M[cc].name : cc) + '：' + (v ? v.textContent : '?') + ' 个场景标签';
+      }
+    });
+    mx.addEventListener('mouseleave', function () {
+      [].forEach.call(mx.querySelectorAll('.hl'), function (x) { x.classList.remove('hl'); });
+      if (info) info.textContent = def;
+    });
   }
 
   function render() {
@@ -1121,6 +1325,8 @@
 
     /* 数字滚动：首页速览与页面统计从 0 滚到目标值 */
     animateNumbers(view);
+    bindReveal(view);
+    if (!p.length) bindHome(view);
 
     // 页面级交互
     if (p[0] === 'stage') bindFilters(view);
