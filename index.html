@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>油链天工 —— 石油勘探开发智能化可能性地图</title>
+<meta name="description" content="油链天工：按石油作业链条 13 环节 61 场景逐环节展示可被深度学习改造的候选场景，每个场景配套可运行的智能化案例示范。">
+
+<link rel="icon" type="image/png" href="assets/logo-favicon.png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+<link rel="stylesheet" href="assets/core/tokens.css?v=20261022i">
+<link rel="stylesheet" href="assets/core/layout.css?v=20261022i">
+<link rel="stylesheet" href="assets/core/ui.css?v=20261022i">
+</head>
+<body>
+
+<div id="view">
+  <main class="wrap" style="padding:120px 0">
+    <div class="empty"><b>正在加载</b>如果这行字一直不消失，说明脚本没有正确执行，
+    请检查浏览器控制台。</div>
+  </main>
+</div>
+
+<noscript>
+  <div class="wrap" style="padding:80px 0">
+    <div class="empty"><b>需要启用 JavaScript</b>本站是纯前端渲染的，所有页面由本地脚本生成。</div>
+  </div>
+</noscript>
+
+<!-- =========================================================
+     脚本加载顺序（改这里之前先读 docs/如何添加新案例.md）
+     1. data.js         场景元数据
+     2. registry.js     案例注册表
+     3. kit.js          渲染工具箱
+     4. cases/*         案例插件 —— 新增案例加在这一段
+     5. case-demo-host  示范宿主（整页 iframe / 模块 Shadow DOM）
+     6. case-upload     案例包导入（读 localStorage，必须在 shell 前）
+     7. shell.js        外壳，必须最后
+     ========================================================= -->
+<script src="assets/data.js?v=20261022i"></script>
+<script src="assets/core/registry.js?v=20261022i"></script>
+<script src="assets/core/kit.js?v=20261022i"></script>
+
+<script src="assets/cases/welllog-layer.case.js?v=20261022i"></script>
+<script src="assets/cases/welllog-layer.demo.js?v=20261022i"></script>
+
+<!-- AUTO-CASES BEGIN (由 tools/build-plugins.js 维护) -->
+<script src="assets/cases/wo1-workover-kg.case.js?v=20261024"></script>
+<script src="assets/cases/wo4-workover-warn.case.js?v=20261024"></script>
+<script src="assets/cases/wo5-workover-days.case.js?v=20261024"></script>
+<script src="assets/cases/wo3-casing-cv.case.js?v=20261024"></script>
+<script src="assets/cases/wo2-fishing-match.case.js?v=20261024"></script>
+<script src="assets/cases/r5-quality-softsensor.case.js?v=20261024"></script>
+<script src="assets/cases/r2-fcc-predict.case.js?v=20261024"></script>
+<script src="assets/cases/r4-lims-audit.case.js?v=20261024"></script>
+<script src="assets/cases/r1-distill-opt.case.js?v=20261024"></script>
+<script src="assets/cases/r3-pdm-maint.case.js?v=20261024"></script>
+<script src="assets/cases/c3-loss-risk.case.js?v=20261024"></script>
+<script src="assets/cases/c1-cbl-eval.case.js?v=20261024"></script>
+<script src="assets/cases/c4-centralizer.case.js?v=20261024"></script>
+<script src="assets/cases/c2-cement-opt.case.js?v=20261024"></script>
+<script src="assets/cases/g1-remote-litho.case.js?v=20261024"></script>
+<script src="assets/cases/g3-map-vector.case.js?v=20261024"></script>
+<script src="assets/cases/g2-geochem-cluster.case.js?v=20261024"></script>
+<script src="assets/cases/g4-outcrop-fracture.case.js?v=20261024"></script>
+<script src="assets/cases/e3-chemical-screen.case.js?v=20261024"></script>
+<script src="assets/cases/e1-frac-opt.case.js?v=20261024"></script>
+<script src="assets/cases/e2-frac-geometry.case.js?v=20261024"></script>
+<script src="assets/cases/e5-microbial-ts.case.js?v=20261024"></script>
+<script src="assets/cases/e4-steam-cycle.case.js?v=20261024"></script>
+<script src="assets/cases/co1-completion-kg.case.js?v=20261024"></script>
+<script src="assets/cases/co3-tubular-load.case.js?v=20261024"></script>
+<script src="assets/cases/co2-perf-design.case.js?v=20261024"></script>
+<script src="assets/cases/co4-slide-rl.case.js?v=20261024"></script>
+<script src="assets/cases/p1-perf-opt.case.js?v=20261024"></script>
+<script src="assets/cases/p2-tunnel-proxy.case.js?v=20261024"></script>
+<script src="assets/cases/p3-charge-kg.case.js?v=20261024"></script>
+<script src="assets/cases/p4-perf-eval.case.js?v=20261024"></script>
+<script src="assets/cases/m1-cutting-cv.case.js?v=20261024"></script>
+<script src="assets/cases/m5-report-nlp.case.js?v=20261024"></script>
+<script src="assets/cases/m2-gaslog-ts.case.js?v=20261024"></script>
+<script src="assets/cases/m3-fluor-cv.case.js?v=20261024"></script>
+<script src="assets/cases/m4-drillops-seg.case.js?v=20261024"></script>
+<script src="assets/cases/w2-resparam-net.case.js?v=20261024"></script>
+<script src="assets/cases/w4-litho-knn.case.js?v=20261024"></script>
+<script src="assets/cases/w3-image-fracture.case.js?v=20261024"></script>
+<script src="assets/cases/w5-log-repair.case.js?v=20261024"></script>
+<script src="assets/cases/w1-curve-seg.case.js?v=20261024"></script>
+<script src="assets/cases/s4-inversion-proxy.case.js?v=20261024"></script>
+<script src="assets/cases/s3-firstbreak-dl.case.js?v=20261024"></script>
+<script src="assets/cases/s1-fault-3dseg.case.js?v=20261024"></script>
+<script src="assets/cases/s2-seisfacies.case.js?v=20261024"></script>
+<script src="assets/cases/s5-denoise-net.case.js?v=20261024"></script>
+<script src="assets/cases/t5-tank-monitor.case.js?v=20261024"></script>
+<script src="assets/cases/t4-meter-drift.case.js?v=20261024"></script>
+<script src="assets/cases/t1-pipeline-leak.case.js?v=20261024"></script>
+<script src="assets/cases/t2-corrosion-eval.case.js?v=20261024"></script>
+<script src="assets/cases/t3-network-opt.case.js?v=20261024"></script>
+<script src="assets/cases/pr2-rate-forecast.case.js?v=20261024"></script>
+<script src="assets/cases/pr1-dynocard.case.js?v=20261024"></script>
+<script src="assets/cases/pr3-injection-opt.case.js?v=20261024"></script>
+<script src="assets/cases/pr4-esp-warning.case.js?v=20261024"></script>
+<script src="assets/cases/pr5-wax-scale.case.js?v=20261024"></script>
+<script src="assets/cases/d2-kick-warning.case.js?v=20261024"></script>
+<script src="assets/cases/d3-trajectory-mpc.case.js?v=20261024"></script>
+<script src="assets/cases/d5-mud-adjust.case.js?v=20261024"></script>
+<script src="assets/cases/d4-drillpipe-life.case.js?v=20261024"></script>
+<script src="assets/cases/d1-rop-opt.case.js?v=20261024"></script>
+<!-- AUTO-CASES END -->
+
+<!-- ↑ 新案例加在这里：<script src="assets/cases/你的案例.case.js"></script> -->
+
+<!-- 上传的案例包（localStorage）在这里恢复注册，必须在 shell.js 之前 -->
+<script src="assets/core/case-demo-host.js?v=20261022i"></script>
+<script src="assets/core/case-upload.js?v=20261022i"></script>
+
+<script src="assets/core/admin.js?v=20261022i"></script>
+
+<script src="assets/core/shell.js?v=20261022i"></script>
+
+</body>
+</html>
