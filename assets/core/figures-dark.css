@@ -1,0 +1,54 @@
+/* 案例说明图的旧配色适配。只匹配已存在的色值，不改首页实物、品牌或沙箱演示。 */
+html[data-theme="dark"] :is(.figure,.lb-body) svg{background:var(--card)}
+
+/* 白色节点和文档缩略图；文字的白色用于深色实体内的标签，保持原样。 */
+html[data-theme="dark"] :is(.figure,.lb-body,.tg-net,.tg-cc-cover,.tg-feat-cv) svg
+  :is(rect,circle,ellipse,path,polygon):is([fill="#fff"],[fill="#ffffff"]){fill:var(--card)}
+
+/* 图框与流程模块：保留蓝、橙、红、绿等分组含义。 */
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([fill="#f4f8fd"],[fill="#fdfcf9"],[fill="#f5f4ef"],[fill="#eef2f8"],[fill="#eef3f9"]){fill:var(--card-soft)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([fill="#e7f0fb"],[fill="#e6f1ec"],[fill="#dfe9e2"]){fill:var(--jade-l)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([fill="#e9eef5"],[fill="#e9eef6"],[fill="#e8eff8"],[fill="#e7eef9"],[fill="#e8f1fa"],[fill="#dbe5f2"],[fill="#dde5ef"]){fill:var(--bg-opt)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([fill="#f6ebe1"],[fill="#f8ecdf"],[fill="#f2ddd0"],[fill="#f6e3d3"]){fill:var(--clay-l)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([fill="#f7e9e6"],[fill="#f9e9e5"]){fill:var(--bad-bg)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg [fill="#efe9f4"]{fill:var(--bg-nlp)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([fill="#f1f1dd"],[fill="#e2eede"]){fill:var(--bg-kg)}
+
+/* 网格、坐标轴和连接线。物体的岩层、钢材等填色不在映射范围内。 */
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#dfe6f0"],[stroke="#e9eef6"],[stroke="#c9d4e4"],[stroke="#bfcddf"],[stroke="#dde5ef"],[stroke="#dbe5f2"]){stroke:var(--line-2)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#202b38"],[stroke="#172b46"],[stroke="#52627a"],[stroke="#64748b"]){stroke:var(--ink-2)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg [stroke="#9ba3a9"]{stroke:var(--ink-3)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg marker [fill="#9ba3a9"]{fill:var(--ink-3)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg circle[fill="#202b38"]{fill:var(--ink-2)}
+
+/* 数据线提亮；实体填色保留，避免其中的白色数字失去对比。 */
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#2875c7"],[stroke="#1769b3"],[stroke="#2f7d6b"]){stroke:var(--jade)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#41699b"],[stroke="#164b88"]){stroke:var(--c-opt)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#d47a3a"],[stroke="#b26a39"],[stroke="#c46a2b"]){stroke:var(--clay)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg [stroke="#b05a51"]{stroke:var(--bad)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg [stroke="#7e5a8d"]{stroke:var(--c-nlp)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#767a2e"],[stroke="#708060"]){stroke:var(--c-kg)}
+
+/* 固定深色文字改为对应的文字层级，非文字形状保留真实填色。 */
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#202b38"],[fill="#172b46"],[fill="#242b2e"],[fill="#3a3f42"]){fill:var(--ink)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#52627a"],[fill="#3b4c63"],[fill="#5d666d"],[fill="#3d463f"],[fill="#6b5527"],[fill="#37455c"],[fill="#7a4522"],[fill="#2b4664"]){fill:var(--ink-2)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#64748b"],[fill="#9ba3a9"],[fill="#79828a"],[fill="#8a8f94"]){fill:var(--ink-3)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg g[fill="#52627a"]{fill:var(--ink-2)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg g[fill="#64748b"]{fill:var(--ink-3)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg g[fill="#172b46"] text:not([fill]){fill:var(--ink)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#2875c7"],[fill="#1769b3"],[fill="#2f7d6b"]){fill:var(--jade)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#41699b"],[fill="#164b88"]){fill:var(--c-opt)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#d47a3a"],[fill="#b26a39"],[fill="#c46a2b"]){fill:var(--clay)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text[fill="#b05a51"]{fill:var(--bad)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text[fill="#7e5a8d"]{fill:var(--c-nlp)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#767a2e"],[fill="#708060"]){fill:var(--c-kg)}
+
+/* 钻井步骤图的信号、候选与阈值标记。 */
+html[data-theme="dark"] :is(.figure,.lb-body) svg [stroke="#3986c8"]{stroke:var(--c-opt)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text[fill="#3986c8"]{fill:var(--c-opt)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#0b8c80"],[stroke="#258a82"]){stroke:var(--ok)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#0b8c80"],[fill="#258a82"]){fill:var(--ok)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#c47b31"],[stroke="#d58a45"]){stroke:var(--clay)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#c47b31"],[fill="#d58a45"]){fill:var(--clay)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg :is([stroke="#b65e58"],[stroke="#bf6570"]){stroke:var(--bad)}
+html[data-theme="dark"] :is(.figure,.lb-body) svg text:is([fill="#b65e58"],[fill="#bf6570"]){fill:var(--bad)}

@@ -49,26 +49,61 @@
      登录页
      ========================================================= */
   function loginHTML(msg) {
-    return '<main class="wrap" style="max-width:460px;padding-top:70px">' +
-      '<div class="adm-card">' +
-      '<div class="eyebrow">ADMIN SIGN IN</div><h2 style="margin:8px 0 4px">管理员登录</h2>' +
-      '<p class="small muted">登录后可管理案例、技术类别与场景。默认账号 <b>admin</b>，默认密码 <b>admin123</b>，登录后请尽快修改。</p>' +
-      (msg ? '<div class="callout warn" style="margin:12px 0"><span class="ci">!</span><span>' + esc(msg) + '</span></div>' : '') +
-      '<label class="imp-f"><span>账号</span><input type="text" id="adm-user" autocomplete="username"></label>' +
-      '<label class="imp-f"><span>密码</span><input type="password" id="adm-pass" autocomplete="current-password"></label>' +
-      '<div style="display:flex;gap:8px;margin-top:16px">' +
-      '<button class="btn primary" id="adm-login">登录</button>' +
-      '<a class="btn ghost" href="#/">返回站点</a></div>' +
-      '<p class="small muted" style="margin-top:14px">本站为纯静态演示，账号只做操作门槛，不是安全边界。</p>' +
-      '</div></main>';
+    var net = '<svg viewBox="0 0 520 260" aria-hidden="true">' +
+      '<g fill="none" stroke="#5fa8d8" stroke-opacity=".55" stroke-width="1.1">' +
+      '<path d="M60 190 L150 120 L250 160 L350 90 L460 130"/>' +
+      '<path d="M150 120 L210 60 L350 90"/><path d="M250 160 L300 210 L420 190"/>' +
+      '<path d="M60 190 L120 240 L300 210"/><path d="M350 90 L420 190"/>' +
+      '</g>' +
+      '<g fill="#e8f1fa">' +
+      '<circle cx="60" cy="190" r="4"/><circle cx="150" cy="120" r="5"/><circle cx="250" cy="160" r="4"/>' +
+      '<circle cx="350" cy="90" r="6"/><circle cx="460" cy="130" r="4"/><circle cx="210" cy="60" r="3.5"/>' +
+      '<circle cx="300" cy="210" r="4"/><circle cx="420" cy="190" r="4"/><circle cx="120" cy="240" r="3.5"/>' +
+      '</g>' +
+      '<g fill="#7fd4db"><circle cx="350" cy="90" r="10" fill-opacity=".14"/><circle cx="150" cy="120" r="9" fill-opacity=".12"/></g>' +
+      '<g font-family="monospace" font-size="8" fill="#7fa3c2" letter-spacing="1.4">' +
+      '<text x="40" y="216">SURVEY</text><text x="330" y="74">AI NODE</text><text x="404" y="212">REFINE</text>' +
+      '</g></svg>';
+
+    return '<main class="tg-login">' +
+      '<section class="tg-login-l">' +
+      '<div class="tg-login-brand"><img src="assets/logo.png" alt="油链天工">' +
+      '<span><b>油链天工</b><span>TIANGONG · PETRO × AI ATLAS</span></span></div>' +
+      '<div class="tg-login-copy"><h1>石油勘探开发<br>智能化应用图谱</h1>' +
+      '<p>13 个作业环节 · 61 个候选场景 · ' + global.Cases.stats().registered + ' 个可运行案例。管理后台用于维护案例、技术类别与场景元数据。</p></div>' +
+      '<div class="tg-login-net">' + net + '</div>' +
+      '<div class="tg-login-tags"><span>STATIC</span><span>NO BACKEND</span><span>LOCAL STORAGE</span></div>' +
+      '</section>' +
+
+      '<section class="tg-login-r"><div class="tg-login-form">' +
+      '<div class="eyebrow">ADMIN SIGN IN</div>' +
+      '<h2>登录管理后台</h2>' +
+      '<p class="sub">用管理员账号进入案例、技术与场景的维护界面。所有改动保存在本机浏览器。</p>' +
+      '<div class="tg-demo"><i>DEMO</i><span>这是<b>纯静态演示环境</b>：账号仅作操作门槛，不是安全边界，默认凭据见项目文档，请勿用于真实生产。</span></div>' +
+      '<div class="tg-login-err" id="adm-err">' + (msg ? esc(msg) : '') + '</div>' +
+      '<div class="tg-field"><label for="adm-user">账号</label><input type="text" id="adm-user" autocomplete="username" placeholder="输入管理员账号"></div>' +
+      '<div class="tg-field"><label for="adm-pass">密码</label><input type="password" id="adm-pass" autocomplete="current-password" placeholder="输入密码"></div>' +
+      '<button class="btn primary tg-login-btn" id="adm-login" type="button">登录</button>' +
+      '<div class="tg-login-back"><a href="#/">← 返回网站首页</a></div>' +
+      '<div class="tg-login-note">忘记密码？清除本站浏览器数据会重置为初始账号。管理数据同样存于 localStorage，清理前请先导出案例清单。</div>' +
+      '</div></section></main>';
   }
 
   function doLogin() {
     var u = document.getElementById('adm-user');
     var p = document.getElementById('adm-pass');
+    var err = document.getElementById('adm-err');
     var acc = account();
     if (u.value.trim() !== acc.user || hash(p.value) !== acc.hash) {
-      alert('账号或密码不对。默认 admin / admin123。');
+      if (err) {
+        err.textContent = '账号或密码不正确。请使用管理员凭据，或查看项目文档中的默认账号说明。';
+        err.classList.add('on');
+        err.style.animation = 'none';
+        void err.offsetWidth;
+        err.style.animation = '';
+      }
+      p.value = '';
+      p.focus();
       return;
     }
     global.sessionStorage.setItem(SESS, '1');

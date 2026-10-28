@@ -76,7 +76,7 @@
       var spec = Array.isArray(d) ? d[1] : '';
       var note = Array.isArray(d) ? d[2] : '';
       return '<div class="cl-item" data-cl="' + i + '">' +
-        '<span class="cl-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>' +
+        '<span class="cl-box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--ink-inv)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>' +
         '<span><span class="cl-t">' + esc(name) + '</span>' +
         '<span class="cl-s">' + esc(spec) + '</span></span>' +
         '<span class="cl-n">' + esc(note) + '</span></div>';
@@ -125,6 +125,7 @@
       return '<div class="pstep"><div class="pn">' + pad(i + 1) + '</div><div class="pc">' +
         '<h4>' + esc(s.name) + (s.role ? '<span class="role">' + esc(s.role) + '</span>' : '') + '</h4>' +
         '<div class="pdo">' + rich(s.do) + '</div>' +
+        (s.figure && s.figure.svg ? figure(s.figure.svg, '步骤 ' + pad(i + 1), s.figure.caption) : '') +
         (s.effect ? '<div class="peff"><span class="k">预期效果</span><span>' + rich(s.effect) + '</span></div>' : '') +
         (s.trap ? '<div class="peff" style="border-top-color:rgba(176,90,81,.2)"><span class="k" style="color:var(--bad)">常见坑</span><span>' + rich(s.trap) + '</span></div>' : '') +
         '</div></div>';

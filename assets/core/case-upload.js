@@ -214,11 +214,13 @@
         title: w.title || '案例流程',
         lead: w.lead || [],
         stats: w.stats || null,
+        overview: w.overview || '',
         steps: (w.steps || []).map(function (s) {
           return {
             name: s.name || '未命名步骤',
             role: s.role || '',
             do: s.do || '',
+            figure: s.figure ? { svg: s.figure.svg || '', caption: s.figure.caption || '' } : null,
             effect: s.effect || '',
             trap: s.trap || ''
           };
@@ -543,7 +545,7 @@
 
   var TPL_CSS = [
     '/* 示范页样式。运行在 iframe 里，可以随便写，不会影响主站。 */',
-    ':root{--ink:#242b2e;--ink-2:#4d565b;--ink-3:#79828a;--line:#e9e4d8;--jade:#2f7d6b;--paper:#fbfaf6}',
+    ':root{--ink:#242b2e;--ink-2:#4d565b;--ink-3:#79828a;--line:#e9e4d8;--jade:#2f7d6b;--paper:#fbfaf6;--card:#fff}',
     '*{box-sizing:border-box}',
     'body{margin:0;padding:18px 20px 24px;background:var(--paper);color:var(--ink);',
     '  font-family:"Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:13px;line-height:1.7}',
@@ -554,7 +556,7 @@
     '.ctl label{font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:6px}',
     '.ctl output{font-family:ui-monospace,monospace;font-size:13px;color:var(--jade);font-weight:600}',
     '.ctl input[type=range]{flex:1;min-width:220px;accent-color:var(--jade);height:18px}',
-    '#log{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff}',
+    '#log{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:var(--card)}',
     '.note{margin-top:10px;font-size:12px;color:var(--ink-3)}',
     '.note b{color:var(--ink)}'
   ].join('\n');

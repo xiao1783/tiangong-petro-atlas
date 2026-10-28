@@ -16,17 +16,18 @@
   var MINSEG = 8;       // 最小层厚 1 m = 8 点
   var TOL = 8;          // 容差 ±1 m = 8 点
 
-  /* 浅色配色：所有色值与 tokens.css 保持一致 */
+  /* 图表随主站主题变量切换；岩性条保留原有地质配色。 */
   var C = {
-    curve: '#2f3a3f',
-    grid: '#eeeae0',
-    gridSoft: '#f4f1e9',
-    text: '#79828a',
-    textDim: '#9ba3a9',
-    truth: '#1e63b4',
-    det: '#b26a39',
-    hover: '#b9c0c5',
-    thin: '#f0dfa4'
+    background: 'var(--card,#ffffff)',
+    curve: 'var(--ink,#2f3a3f)',
+    grid: 'var(--line,#eeeae0)',
+    gridSoft: 'var(--paper-3,#f4f1e9)',
+    text: 'var(--ink-2,#79828a)',
+    textDim: 'var(--ink-3,#9ba3a9)',
+    truth: 'var(--c-opt,#1e63b4)',
+    det: 'var(--clay,#b26a39)',
+    hover: 'var(--ink-4,#b9c0c5)',
+    thin: 'var(--clay-l,#f0dfa4)'
   };
 
   var LITH = [
@@ -276,7 +277,7 @@
     /* ------- 主图 ------- */
     function drawTrack() {
       var s = '';
-      s += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#ffffff"/>';
+      s += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="' + C.background + '"/>';
 
       for (var d = 0; d <= 80; d += 10) {
         var yy = padT + d / 80 * ph;
@@ -288,7 +289,7 @@
         s += '<line x1="' + xx + '" y1="' + padT + '" x2="' + xx + '" y2="' + (padT + ph) + '" stroke="' + C.gridSoft + '"/>';
         s += '<text x="' + xx + '" y="' + (padT + ph + 15) + '" fill="' + C.textDim + '" font-size="9" font-family="monospace" text-anchor="middle">' + v + '</text>';
       });
-      s += '<text x="' + (padL + pw) + '" y="' + (padT + ph + 15) + '" fill="' + C.textDim + '" font-size="8.5" font-family="monospace" text-anchor="end">API</text>';
+      s += '<text x="' + (padL + pw + 32) + '" y="' + (padT + ph + 15) + '" fill="' + C.textDim + '" font-size="8.5" font-family="monospace" text-anchor="end">API</text>';
       s += '<text x="6" y="' + (padT - 10) + '" fill="' + C.text + '" font-size="9" font-family="monospace">深度(m)</text>';
 
       // 检出层段：底色 + 左色条
@@ -309,14 +310,18 @@
         var y0 = Y(L.a), y1 = Y(L.b - 1) + (Y(1) - Y(0));
         s += '<rect x="' + padL + '" y="' + y0.toFixed(1) + '" width="' + pw + '" height="' + Math.max(2, y1 - y0).toFixed(1) + '" fill="' + C.thin + '" opacity=".55"/>';
         s += '<line x1="' + (padL + pw + 6) + '" y1="' + ((y0 + y1) / 2) + '" x2="' + (padL + pw + 16) + '" y2="' + ((y0 + y1) / 2) + '" stroke="' + C.det + '" stroke-width="1"/>';
-        s += '<text x="' + (padL + pw + 19) + '" y="' + ((y0 + y1) / 2 + 3) + '" fill="' + C.det + '" font-size="8" font-family="monospace">' + L.thick.toFixed(1) + 'm 漏检</text>';
+        s += '<text x="' + (padL + 8) + '" y="' + ((y0 + y1) / 2 + 3) + '" fill="' + C.det + '" font-size="8" font-family="monospace">' + L.thick.toFixed(1) + 'm 漏检</text>';
       });
 
       // 真实界面
       if (state.showTrue) {
+        var previousTrueLabel = -Infinity;
         well.cut.forEach(function (c) {
+          var labelY = Math.max(Y(c) - 3, previousTrueLabel + 12);
+          previousTrueLabel = labelY;
           s += '<line x1="' + padL + '" y1="' + Y(c) + '" x2="' + (padL + pw) + '" y2="' + Y(c) + '" stroke="' + C.truth + '" stroke-width="1" stroke-dasharray="4 5" opacity="0.65"/>';
-          s += '<text x="' + (padL + pw - 2) + '" y="' + (Y(c) - 3) + '" fill="' + C.truth + '" font-size="8" font-family="monospace" text-anchor="end" opacity="0.8">真 ' + (TOP + c * STEP).toFixed(1) + '</text>';
+          s += '<line x1="' + (padL + pw - 1) + '" y1="' + Y(c) + '" x2="' + (padL + pw - 6) + '" y2="' + labelY + '" stroke="' + C.truth + '" opacity=".5"/>';
+          s += '<text x="' + (padL + pw - 8) + '" y="' + labelY + '" fill="' + C.truth + '" font-size="8" font-family="monospace" text-anchor="end" opacity="0.8">真 ' + (TOP + c * STEP).toFixed(1) + '</text>';
         });
       }
 

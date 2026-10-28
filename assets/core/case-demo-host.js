@@ -48,9 +48,74 @@
     '.cd-err b{display:block;margin-bottom:4px;font-size:12.5px}' +
     '.cd-err code{font-family:var(--mono,monospace);background:rgba(0,0,0,.05);padding:1px 4px;border-radius:3px}';
 
+  /* 沙箱与独立预览共享暗色；只映射模板界面色，保留图片、Canvas 和岩性材质色。 */
+  var DARK_CSS =
+    ':root,:host{color-scheme:dark;--paper:#081a27!important;--paper-2:#102737!important;' +
+    '--paper-3:#183446!important;--card:#102737!important;--card-soft:#142e3f!important;' +
+    '--ink:#e6f0f7!important;--ink-2:#c1d3df!important;--ink-3:#9fb5c5!important;--ink-4:#819bab!important;' +
+    '--line:#294556!important;--line-2:#203b4d!important;--line-3:#3d5a6b!important;' +
+    '--jade:#87e2d2!important;--jade-d:#acefe3!important;--jade-l:#173b39!important;' +
+    '--clay:#efbe77!important;--clay-l:#3e302b!important;--blue:#9bbce8!important;--blue-l:#253749!important;' +
+    '--bad:#f09990!important;--bad-l:#422e33!important;--bad-bg:#422e33!important;' +
+    '--ok:#82cbb6!important;--ok-bg:#173b39!important;--warn:#e5c474!important;--warn-bg:#3b3527!important}' +
+    'html,body,.cd-box{background:var(--paper)!important;color:var(--ink)!important}' +
+    'body::after{color:#819bab!important}' +
+    'a{color:var(--jade)}::selection{background:#315b76;color:var(--ink)}' +
+    'svg.chart,.readouts .ro,.tag,.card,.case-row,.report,fieldset,dialog,table{background:var(--card)!important;border-color:var(--line)!important}' +
+    '.case-row .mm{color:#081a27!important}' +
+    '.readouts .ro:hover{background:var(--paper-3)!important}' +
+    'th,td{border-color:var(--line)!important}th{background:var(--paper-3)!important}' +
+    'input:not([type=range]):not([type=checkbox]):not([type=radio]),select,textarea{' +
+    'background:var(--card)!important;color:var(--ink)!important;border-color:var(--line-3)!important;accent-color:var(--jade)}' +
+    'input::placeholder,textarea::placeholder{color:var(--ink-3)}option{background:var(--card);color:var(--ink)}' +
+    '.btn,.btn.primary,.btn:not(.ghost):not(.small):not(.clay){background:var(--jade)!important;color:#092033!important;border-color:var(--jade)!important}' +
+    '.btn.clay{background:var(--clay)!important;border-color:var(--clay)!important;color:#281b13!important}' +
+    '.btn.ghost{background:transparent!important;color:var(--jade)!important;border-color:var(--line-3)!important}' +
+    '.btn.ghost:hover{background:var(--jade-l)!important}' +
+    '.btn.live-on,.btn.live-on:not(.ghost):not(.small):not(.clay){background:linear-gradient(180deg,#f4ca90,#efad79)!important;border-color:var(--clay)!important;color:#281b13!important}' +
+    '.btn.live-on::before{background:currentColor!important}' +
+    ':focus-visible{outline:2px solid var(--jade);outline-offset:3px}' +
+    '.ctl input[type=range]::-webkit-slider-runnable-track{background:linear-gradient(90deg,var(--jade) 0%,var(--jade) var(--fill,50%),var(--line) var(--fill,50%))}' +
+    '.ctl input[type=range]::-webkit-slider-thumb{background:var(--paper);border-color:var(--jade)}' +
+    '.ctl input[type=range]::-moz-range-track{background:var(--line)}' +
+    '.ctl input[type=range]::-moz-range-thumb{background:var(--paper);border-color:var(--jade)}' +
+    '::-webkit-scrollbar-thumb{background:var(--line-3);border-color:var(--paper)}' +
+    '::-webkit-scrollbar-thumb:hover{background:#57778c}' +
+    'svg{fill:var(--ink-3)}';
+
+  /* SVG 由案例脚本实时重绘，属性选择器会自动覆盖每次新增的节点。 */
+  [
+    ['#202b38', '#e6f0f7'], ['#52627a', '#c1d3df'], ['#64748b', '#9fb5c5'], ['#9ba3a9', '#9fb5c5'],
+    ['#dfe6f0', '#294556'], ['#e9eef6', '#203b4d'], ['#c9d4e4', '#3d5a6b'],
+    ['#2875c7', '#78baff'], ['#164b88', '#9ccaff'], ['#41699b', '#9bbce8'],
+    ['#d47a3a', '#efad79'], ['#b05a51', '#f09990'], ['#8f4a42', '#dd928c'],
+    ['#e7f0fb', '#17364b'], ['#e9eef5', '#253749'], ['#f6ebe1', '#3e302b'], ['#f7e9e6', '#422e33'],
+    ['#f4f8fd', '#081a27'], ['#eef2f8', '#142e3f'], ['#f1f4f9', '#142e3f'],
+    ['#fbfcfe', '#102737'], ['#fafaf7', '#102737'], ['#eef3fa', '#142e3f'],
+    ['#2f7d6b', '#87e2d2'], ['#b26a39', '#efbe77'], ['#e6f1ec', '#173b39']
+  ].forEach(function (pair) {
+    ['fill', 'stroke'].forEach(function (attr) {
+      DARK_CSS += 'svg [' + attr + '="' + pair[0] + '" i]{' + attr + ':' + pair[1] + '!important}';
+    });
+  });
+  DARK_CSS += 'svg [fill="#fff" i]:not(text):not(g),svg [fill="#ffffff" i]:not(text):not(g){fill:#102737!important}';
+  DARK_CSS += 'svg [stroke="#efece1" i]{stroke:#294556!important}';
+  /* 这些实心徽标/堆叠条在提亮后使用深字；其余白字及分组继承保持原义。 */
+  [['#2875c7', '#78baff'], ['#41699b', '#9bbce8'], ['#d47a3a', '#efad79'], ['#b05a51', '#f09990'], ['#52627a', '#c1d3df']].forEach(function (pair) {
+    DARK_CSS += '.case-row .mm[style*="background:' + pair[0] + '" i]{background:' + pair[1] + '!important}';
+    ['#fff', '#ffffff', 'white'].forEach(function (white) {
+      DARK_CSS += 'svg rect[fill="' + pair[0] + '" i]+text[fill="' + white + '" i]{fill:#081a27!important}';
+    });
+  });
+
   var seq = 0;
 
   /* ---------------- 小工具 ---------------- */
+  function currentTheme() {
+    var theme = global.Theme && global.Theme.get ? global.Theme.get()
+      : global.document && global.document.documentElement.dataset && global.document.documentElement.dataset.theme;
+    return theme === 'dark' ? 'dark' : 'light';
+  }
   function esc(s) {
     return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
@@ -111,6 +176,23 @@
     return String(js).replace(/<\/script/gi, '<\\/script');
   }
 
+  /* 此函数随 HTML 内联，沙箱中不访问父页 DOM。 */
+  function initPageTheme(theme, token) {
+    function apply(value) {
+      theme = value === 'dark' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+      var style = document.querySelector('style[data-case-theme="dark"]');
+      if (style) style.media = theme === 'dark' ? 'all' : 'not all';
+    }
+    apply(theme);
+    document.addEventListener('DOMContentLoaded', function () { apply(theme); });
+    window.addEventListener('message', function (event) {
+      var data = event.data;
+      if (event.source === parent && data && data.__caseTheme === token && (data.theme === 'light' || data.theme === 'dark')) apply(data.theme);
+    });
+  }
+
   function buildPageDoc(pkg, token) {
     var files = pkg.files || [];
     var d = pkg.demo || {};
@@ -166,14 +248,17 @@
       used[f.name] = 1;
       tail += '<script data-src="' + esc(f.name) + '">' + jsText(f.data) + '</script' + '>';
     });
+    tail += '<style data-case-theme="dark" media="' + (currentTheme() === 'dark' ? 'all' : 'not all') + '">' + DARK_CSS + '</style>';
 
     /* 5. 注入资源表与高度上报 */
     var assetsJson = JSON.stringify(map).replace(/</g, '\\u003c');
     var head =
-      '<script>window.__ASSETS__=' + assetsJson + ';' +
+      '<script>(' + initPageTheme.toString() + ')(' + JSON.stringify(currentTheme()) + ',' + JSON.stringify(token || '') + ');window.__ASSETS__=' + assetsJson + ';' +
       'window.caseAsset=function(n){return window.__ASSETS__[n]||""};' +
       '(function(){var last=-1;function send(){' +
-      'var h=Math.max(document.body?document.body.scrollHeight:0,document.documentElement.scrollHeight);' +
+      'var content=document.querySelector("main[data-visual-case]");' +
+      'var h=content?Math.ceil(content.getBoundingClientRect().bottom+window.scrollY+(parseFloat(getComputedStyle(document.body).paddingBottom)||0)):' +
+      'Math.max(document.body?document.body.scrollHeight:0,document.documentElement.scrollHeight);' +
       'h=Math.min(h,4200);if(Math.abs(h-last)>2){last=h;' +
       'try{parent.postMessage({__caseDemo:"' + token + '",h:h},"*")}catch(e){}}}' +
       'document.addEventListener("DOMContentLoaded",send);window.addEventListener("load",send);+(function(){function setR(t){var p=(+t.value-+t.min)/((+t.max-+t.min)||1)*100;t.style.setProperty("--fill",p+"%");}function initAll(){var r=document.querySelectorAll("input[type=range]");for(var i=0;i<r.length;i++)setR(r[i]);}document.addEventListener("input",function(e){if(e.target&&e.target.type==="range")setR(e.target);});if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initAll);}else{initAll();}})();' +
@@ -212,16 +297,39 @@
     function onMsg(e) {
       if (e.source !== frame.contentWindow) return;
       var d = e.data;
+      if (d && d.__drillingTelemetry === true && ctx && ctx.scene && ctx.scene.stageId === 'drilling') {
+        var values = {}, input = d.values || {};
+        var bounds = { rpm: [0, 400], flow: [0, 150], risk: [0, 1], wear: [0, 1], pressure: [0, 250], progress: [0, 1], target: [0, 1000], tripVelocity: [-1.2, 1.2] };
+        Object.keys(bounds).forEach(function (key) {
+          var value = input[key], range = bounds[key];
+          if (typeof value === 'number' && Number.isFinite(value)) values[key] = Math.max(range[0], Math.min(range[1], value));
+        });
+        if (Array.isArray(input.trajectory) && input.trajectory.length >= 2 && input.trajectory.length <= 160 && input.trajectory.every(function (p) {
+          return p && typeof p.x === 'number' && typeof p.z === 'number' && Number.isFinite(p.x) && Number.isFinite(p.z) && Math.abs(p.x) <= 2000 && p.z >= 0 && p.z <= 10000;
+        })) values.trajectory = input.trajectory.map(function (p) { return { x: p.x, z: p.z }; });
+        if (Object.keys(values).length) global.dispatchEvent(new CustomEvent('tiangong-drilling-telemetry', {
+          detail: { sceneId: ctx.scene.id, values: values }
+        }));
+        return;
+      }
       if (!d || d.__caseDemo !== token) return;
       var h = Math.min(6200, Math.max(minH, Number(d.h) + 2));
       frame.style.height = h + 'px';
     }
     global.addEventListener('message', onMsg);
+    function syncTheme(event) {
+      var theme = event && event.detail ? event.detail.theme : currentTheme();
+      if (frame.contentWindow) frame.contentWindow.postMessage({ __caseTheme: token, theme: theme === 'dark' ? 'dark' : 'light' }, '*');
+    }
+    global.addEventListener('tiangong-theme-change', syncTheme);
+    frame.addEventListener('load', syncTheme);
 
     return {
       mode: 'page',
       destroy: function () {
         global.removeEventListener('message', onMsg);
+        global.removeEventListener('tiangong-theme-change', syncTheme);
+        frame.removeEventListener('load', syncTheme);
         frame.remove();
       }
     };
@@ -251,8 +359,12 @@
     var shadow = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
 
     var style = document.createElement('style');
-    style.textContent = tokenCss() + '\n' + BASE_CSS + '\n' +
-      files.filter(function (f) { return isCss(f.name); }).map(function (f) { return String(f.data); }).join('\n');
+    var moduleCss = files.filter(function (f) { return isCss(f.name); }).map(function (f) { return String(f.data); }).join('\n');
+    function syncTheme() {
+      style.textContent = tokenCss() + '\n' + BASE_CSS + '\n' + moduleCss + (currentTheme() === 'dark' ? '\n' + DARK_CSS : '');
+    }
+    syncTheme();
+    global.addEventListener('tiangong-theme-change', syncTheme);
     shadow.appendChild(style);
 
     var box = document.createElement('div');
@@ -317,6 +429,7 @@
     return {
       mode: 'module',
       destroy: function () {
+        global.removeEventListener('tiangong-theme-change', syncTheme);
         try { if (live && typeof live.unmount === 'function') live.unmount(); } catch (e) { }
         cleanups.forEach(function (fn) { try { fn(); } catch (e) { } });
         try { if (shadow.host === host) host.innerHTML = ''; } catch (e) { }

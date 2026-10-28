@@ -1,23 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f2f6fb">
 <title>油链天工 —— 石油勘探开发智能化可能性地图</title>
-<meta name="description" content="油链天工：按石油作业链条 13 环节 61 场景逐环节展示可被深度学习改造的候选场景，每个场景配套可运行的智能化案例示范。">
+<meta property="og:title" content="油链天工 · 石油勘探开发智能化可能性地图">
+<meta property="og:description" content="13 个作业环节 × 76 个候选场景 × 82 个可运行案例——纯前端石油 AI 可视化平台">
+<meta property="og:image" content="assets/logo.png">
+<meta name="description" content="油链天工：按石油作业链条 13 环节 76 场景逐环节展示可被深度学习改造的候选场景，每个场景配套可运行的智能化案例示范。">
 
 <link rel="icon" type="image/png" href="assets/logo-favicon.png">
 <link rel="apple-touch-icon" href="assets/logo.png">
-<link rel="stylesheet" href="assets/core/tokens.css?v=20261022i">
-<link rel="stylesheet" href="assets/core/layout.css?v=20261022i">
-<link rel="stylesheet" href="assets/core/ui.css?v=20261022i">
+<script src="assets/core/theme.js?v=20261026-themes"></script>
+<link rel="stylesheet" href="assets/core/tokens.css?v=20261026-themes">
+<link rel="stylesheet" href="assets/core/layout.css?v=20261027v10">
+<link rel="stylesheet" href="assets/core/ui.css?v=20261028-showcase">
+<link rel="stylesheet" href="assets/core/v9.css?v=20261026-themes">
+<link rel="stylesheet" href="assets/core/home.css?v=20261027-card-motion">
+<link rel="stylesheet" href="assets/core/figures-dark.css?v=20261027-diagrams">
+<link rel="stylesheet" href="assets/core/drilling-cinema.css?v=20261027-cinema">
+<script>/* 首屏描线标题只播一次：本会话回访直接呈现成品 */
+try{if(sessionStorage.getItem('hx-seen'))document.documentElement.classList.add('hx-seen');
+addEventListener('load',function(){setTimeout(function(){try{sessionStorage.setItem('hx-seen','1')}catch(e){}},2600)});}catch(e){}</script>
 </head>
 <body>
 
 <div id="view">
+  <!-- 若骨架屏一直显示，说明脚本未正确执行：请检查浏览器控制台 -->
   <main class="wrap" style="padding:120px 0">
-    <div class="empty"><b>正在加载</b>如果这行字一直不消失，说明脚本没有正确执行，
-    请检查浏览器控制台。</div>
+    <div style="max-width:420px;margin:0 auto" aria-busy="true" aria-label="正在加载">
+      <div class="pending-line" style="width:38%;height:12px;margin-bottom:14px"></div>
+      <div class="pending-line" style="width:100%;height:12px"></div>
+      <div class="pending-line" style="width:84%;height:12px;margin-top:10px"></div>
+    </div>
   </main>
 </div>
 
@@ -37,86 +54,118 @@
      6. case-upload     案例包导入（读 localStorage，必须在 shell 前）
      7. shell.js        外壳，必须最后
      ========================================================= -->
-<script src="assets/data.js?v=20261022i"></script>
+<script src="assets/data.js?v=20261028-teaching"></script>
 <script src="assets/core/registry.js?v=20261022i"></script>
-<script src="assets/core/kit.js?v=20261022i"></script>
+<script src="assets/core/kit.js?v=20261027-diagrams"></script>
+<script src="assets/core/i18n.js?v=20261027-overview"></script>
 
-<script src="assets/cases/welllog-layer.case.js?v=20261022i"></script>
-<script src="assets/cases/welllog-layer.demo.js?v=20261022i"></script>
+<script src="assets/cases/welllog-layer.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/welllog-layer.demo.js?v=20261028-spacing"></script>
 
 <!-- AUTO-CASES BEGIN (由 tools/build-plugins.js 维护) -->
-<script src="assets/cases/wo1-workover-kg.case.js?v=20261024"></script>
-<script src="assets/cases/wo4-workover-warn.case.js?v=20261024"></script>
-<script src="assets/cases/wo5-workover-days.case.js?v=20261024"></script>
-<script src="assets/cases/wo3-casing-cv.case.js?v=20261024"></script>
-<script src="assets/cases/wo2-fishing-match.case.js?v=20261024"></script>
-<script src="assets/cases/r5-quality-softsensor.case.js?v=20261024"></script>
-<script src="assets/cases/r2-fcc-predict.case.js?v=20261024"></script>
-<script src="assets/cases/r4-lims-audit.case.js?v=20261024"></script>
-<script src="assets/cases/r1-distill-opt.case.js?v=20261024"></script>
-<script src="assets/cases/r3-pdm-maint.case.js?v=20261024"></script>
-<script src="assets/cases/c3-loss-risk.case.js?v=20261024"></script>
-<script src="assets/cases/c1-cbl-eval.case.js?v=20261024"></script>
-<script src="assets/cases/c4-centralizer.case.js?v=20261024"></script>
-<script src="assets/cases/c2-cement-opt.case.js?v=20261024"></script>
-<script src="assets/cases/g1-remote-litho.case.js?v=20261024"></script>
-<script src="assets/cases/g3-map-vector.case.js?v=20261024"></script>
-<script src="assets/cases/g2-geochem-cluster.case.js?v=20261024"></script>
-<script src="assets/cases/g4-outcrop-fracture.case.js?v=20261024"></script>
-<script src="assets/cases/e3-chemical-screen.case.js?v=20261024"></script>
-<script src="assets/cases/e1-frac-opt.case.js?v=20261024"></script>
-<script src="assets/cases/e2-frac-geometry.case.js?v=20261024"></script>
-<script src="assets/cases/e5-microbial-ts.case.js?v=20261024"></script>
-<script src="assets/cases/e4-steam-cycle.case.js?v=20261024"></script>
-<script src="assets/cases/co1-completion-kg.case.js?v=20261024"></script>
-<script src="assets/cases/co3-tubular-load.case.js?v=20261024"></script>
-<script src="assets/cases/co2-perf-design.case.js?v=20261024"></script>
-<script src="assets/cases/co4-slide-rl.case.js?v=20261024"></script>
-<script src="assets/cases/p1-perf-opt.case.js?v=20261024"></script>
-<script src="assets/cases/p2-tunnel-proxy.case.js?v=20261024"></script>
-<script src="assets/cases/p3-charge-kg.case.js?v=20261024"></script>
-<script src="assets/cases/p4-perf-eval.case.js?v=20261024"></script>
-<script src="assets/cases/m1-cutting-cv.case.js?v=20261024"></script>
-<script src="assets/cases/m5-report-nlp.case.js?v=20261024"></script>
-<script src="assets/cases/m2-gaslog-ts.case.js?v=20261024"></script>
-<script src="assets/cases/m3-fluor-cv.case.js?v=20261024"></script>
-<script src="assets/cases/m4-drillops-seg.case.js?v=20261024"></script>
-<script src="assets/cases/w2-resparam-net.case.js?v=20261024"></script>
-<script src="assets/cases/w4-litho-knn.case.js?v=20261024"></script>
-<script src="assets/cases/w3-image-fracture.case.js?v=20261024"></script>
-<script src="assets/cases/w5-log-repair.case.js?v=20261024"></script>
-<script src="assets/cases/w1-curve-seg.case.js?v=20261024"></script>
-<script src="assets/cases/s4-inversion-proxy.case.js?v=20261024"></script>
-<script src="assets/cases/s3-firstbreak-dl.case.js?v=20261024"></script>
-<script src="assets/cases/s1-fault-3dseg.case.js?v=20261024"></script>
-<script src="assets/cases/s2-seisfacies.case.js?v=20261024"></script>
-<script src="assets/cases/s5-denoise-net.case.js?v=20261024"></script>
-<script src="assets/cases/t5-tank-monitor.case.js?v=20261024"></script>
-<script src="assets/cases/t4-meter-drift.case.js?v=20261024"></script>
-<script src="assets/cases/t1-pipeline-leak.case.js?v=20261024"></script>
-<script src="assets/cases/t2-corrosion-eval.case.js?v=20261024"></script>
-<script src="assets/cases/t3-network-opt.case.js?v=20261024"></script>
-<script src="assets/cases/pr2-rate-forecast.case.js?v=20261024"></script>
-<script src="assets/cases/pr1-dynocard.case.js?v=20261024"></script>
-<script src="assets/cases/pr3-injection-opt.case.js?v=20261024"></script>
-<script src="assets/cases/pr4-esp-warning.case.js?v=20261024"></script>
-<script src="assets/cases/pr5-wax-scale.case.js?v=20261024"></script>
-<script src="assets/cases/d2-kick-warning.case.js?v=20261024"></script>
-<script src="assets/cases/d3-trajectory-mpc.case.js?v=20261024"></script>
-<script src="assets/cases/d5-mud-adjust.case.js?v=20261024"></script>
-<script src="assets/cases/d4-drillpipe-life.case.js?v=20261024"></script>
-<script src="assets/cases/d1-rop-opt.case.js?v=20261024"></script>
+<script src="assets/cases/wo1-workover-kg.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/wo4-workover-warn.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/wo5-workover-days.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/wo3-casing-cv.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/wo2-fishing-match.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/r5-quality-softsensor.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/r2-fcc-predict.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/r4-lims-audit.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/r1-distill-opt.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/r3-pdm-maint.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/c3-loss-risk.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/c1-cbl-eval.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/c4-centralizer.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/c2-cement-opt.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/g1-remote-litho.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/g3-map-vector.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/g2-geochem-cluster.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/g4-outcrop-fracture.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/e3-chemical-screen.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/e1-frac-opt.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/e2-frac-geometry.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/e5-microbial-ts.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/e4-steam-cycle.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/co1-completion-kg.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/co3-tubular-load.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/co2-perf-design.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/co4-slide-rl.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/p1-perf-opt.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/p2-tunnel-proxy.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/p3-charge-kg.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/p4-perf-eval.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/m1-cutting-cv.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/m5-report-nlp.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/m2-gaslog-ts.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/m3-fluor-cv.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/m4-drillops-seg.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/w2-resparam-net.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/w4-litho-knn.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/w3-image-fracture.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/w5-log-repair.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/w1-curve-seg.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/s4-inversion-proxy.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/s3-firstbreak-dl.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/s1-fault-3dseg.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/s2-seisfacies.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/s5-denoise-net.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/t5-tank-monitor.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/t4-meter-drift.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/t1-pipeline-leak.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/t2-corrosion-eval.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/t3-network-opt.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/pr2-rate-forecast.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/pr1-dynocard.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/pr3-injection-opt.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/pr4-esp-warning.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/pr5-wax-scale.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d1-rop-opt.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d2-kick-warning.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d3-trajectory-mpc.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d4-drillpipe-life.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d5-mud-adjust.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d6-wellbore-stability.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d7-hole-cleaning.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d8-bit-wear.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d9-managed-pressure.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d10-geosteering.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d11-surge-swab.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d12-energy-carbon.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d3-trajectory-forecast.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d2-influx-loss.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d4-stick-slip.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d1-rop-transfer.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d5-mud-recall.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d13-operation-states.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d14-daily-report.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d15-surface-defects.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d16-sensor-drift.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d17-friction-inversion.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d18-fault-evidence.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d19-remaining-time.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d20-bit-selection.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d21-circulating-temperature.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d22-anti-collision.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d23-lcm-blending.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d24-pump-valve.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d25-missing-curve.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d26-solids-control.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d27-telemetry-latency.case.js?v=20261028-spacing"></script>
+<script src="assets/cases/d28-bit-replacement.case.js?v=20261028-spacing"></script>
 <!-- AUTO-CASES END -->
 
 <!-- ↑ 新案例加在这里：<script src="assets/cases/你的案例.case.js"></script> -->
 
 <!-- 上传的案例包（localStorage）在这里恢复注册，必须在 shell.js 之前 -->
-<script src="assets/core/case-demo-host.js?v=20261022i"></script>
-<script src="assets/core/case-upload.js?v=20261022i"></script>
+<script src="assets/core/case-demo-host.js?v=20261027-visual"></script>
+<script src="assets/core/case-upload.js?v=20261027-diagrams"></script>
 
-<script src="assets/core/admin.js?v=20261022i"></script>
+<script src="assets/core/admin.js?v=20261027v10"></script>
 
-<script src="assets/core/shell.js?v=20261022i"></script>
-
+<script src="assets/core/home-hero.js?v=20261027-card-motion"></script>
+<script src="assets/core/home-chain-motion.js?v=20261027-card-motion"></script>
+<script src="assets/core/drilling-cinema.js?v=20261027-visual"></script>
+<script src="assets/core/stat-charts.js?v=20261027-stats"></script>
+<script src="assets/core/shell.js?v=20261028-learning"></script>
 </body>
 </html>
