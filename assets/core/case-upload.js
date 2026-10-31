@@ -215,6 +215,7 @@
         lead: w.lead || [],
         stats: w.stats || null,
         overview: w.overview || '',
+        solution: w.solution && typeof w.solution === 'object' ? w.solution : undefined,
         steps: (w.steps || []).map(function (s) {
           return {
             name: s.name || '未命名步骤',

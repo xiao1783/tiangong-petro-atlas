@@ -506,62 +506,32 @@
 
   function homeHTML() {
     var cs = Cases.stats(), total = A.allScenes.length, keys = Object.keys(M);
-    var drilling = A.index.byStage.drilling;
-    var drillingCases = Cases.list().filter(function (c) {
-      var sc = A.index.byScene[c.sceneId];
-      return sc && sc.stageId === 'drilling';
-    });
-    var featuredIds = ['d1-rop-opt', 'd2-kick-warning', 'd3-trajectory-mpc', 'd4-stick-slip', 'd5-mud-adjust'];
-    var feats = featuredIds.map(function (id) {
-      return drillingCases.filter(function (c) { return c.id === id; })[0];
-    }).filter(Boolean);
-
-    function caseMeta(c) {
-      var sc = A.index.byScene[c.sceneId] || {};
-      var m0 = (c.methods && c.methods[0]) || (sc.methods && sc.methods[0]) || 'cv';
-      return { m0: m0, ck: (M[m0] && (M[m0].colorKey || m0)) || m0 };
-    }
-    var main = feats[0] ? (function () {
-      var c = feats[0], mt = caseMeta(c);
-      return '<a class="tg-feat-main" style="--mc:var(--c-' + mt.ck + ')" href="#/scene/' + c.sceneId + '?case=' + esc(c.id) + '&tab=demo">' +
-        '<span class="tg-feat-cv">' + coverSVG(mt.m0, c.id) + '<span class="badge"><span class="badge-ready">可运行示范</span></span></span>' +
-        '<span class="tg-feat-body"><span class="meta">01 / FEATURED DEMO</span><h3>' + esc((c.title || c.id).split('：')[0]) + '</h3>' +
-        '<p>调整钻井参数，对比推荐方案与预测钻速。</p>' +
-        '<span class="go"><span class="l">' + (c.methods || []).map(function (m) {
-          var ck = (M[m] && (M[m].colorKey || m)) || 'cv';
-          return '<span class="mtag sm" data-m="' + ck + '"><b>' + (M[m] ? M[m].abbr : m) + '</b>' + (M[m] ? esc(M[m].name) : '') + '</span>';
-        }).join('') + '</span><span class="ar">运行演示 <span>↗</span></span></span></span></a>';
-    })() : '';
-    var small = feats.slice(1).map(function (c, i) {
-      var mt = caseMeta(c), title = (c.title || c.id).split('：');
-      return '<a class="tg-fsm" style="--mc:var(--c-' + mt.ck + ')" href="#/scene/' + c.sceneId + '?case=' + esc(c.id) + '&tab=demo">' +
-        '<span class="home-case-index">' + pad(i + 2) + '</span><span class="tg-fsm-b"><b>' + esc(title[0]) + '</b>' +
-        '<i>' + esc(title.slice(1).join('：')) + '</i></span><span class="tg-fsm-arrow">↗</span></a>';
-    }).join('');
     var methods = keys.map(function (k) {
       return '<a class="home-method-link" style="--mc:var(--c-' + (M[k].colorKey || k) + ')" href="#/method/' + k + '">' +
         '<b>' + M[k].abbr + '</b><span>' + esc(M[k].name) + '</span><i aria-hidden="true">↗</i></a>';
     }).join('');
 
     return '<main class="home-overview">' +
-      '<section class="home-hero" aria-labelledby="home-title">' +
+      '<section class="home-hero home-atlas" aria-labelledby="home-title">' +
       '<div class="home-horizon" aria-hidden="true"></div><div class="wrap home-stage">' +
       '<div class="home-copy"><p class="home-eyebrow"><i></i>油链天工 <span>/ PETROLEUM × AI</span></p>' +
       '<h1 id="home-title"><span>向深处探索</span><em>让智能抵达</em></h1>' +
       '<p class="home-subtitle">石油勘探开发 · 智能化可能性地图</p>' +
-      '<p class="home-lead">从钻井现场出发，探索人工智能在石油作业中的应用。</p>' +
-      '<div class="home-actions"><a class="home-primary" href="#/stage/drilling">探索智能钻井 <span>↗</span></a>' +
+      '<p class="home-lead">从地质勘察到加工储运，探索人工智能在石油全流程中的应用。</p>' +
+      '<div class="home-actions"><a class="home-primary" href="#/chain">探索完整作业链 <span>↗</span></a>' +
       '<a class="home-secondary" href="#/cases">浏览案例库 <span>→</span></a></div></div>' +
-      '<div class="home-art" data-renderer="loading"><div class="home-art-label"><span>FIELD / 01</span><b>钻井井场剖面 · 概念示意</b></div>' +
-      '<div class="home-scene-stage" role="group" tabindex="0" aria-label="三维钻井井场，可拖拽旋转" aria-describedby="home-view-help"><span class="home-scene-loading" aria-hidden="true">正在准备三维井场…</span><div class="home-rig-host" aria-hidden="true"></div></div>' +
-      '<div class="home-view-controls" role="group" aria-label="三维井场交互">' +
+      '<div class="home-art" data-renderer="loading" data-region="overview"><div class="atlas-topline"><div class="home-art-label"><span>THE CONNECTED FIELD</span><b>石油全流程交互沙盘</b></div><span class="atlas-concept">三维概念场景 · 非实测工程比例</span></div>' +
+      '<div class="home-scene-stage" role="group" tabindex="0" aria-label="石油全流程三维沙盘，可拖拽旋转或选择区域" aria-describedby="home-view-help"><span class="home-scene-loading" aria-hidden="true">正在构建全流程沙盘…</span><div class="home-rig-host"></div><div class="atlas-vignette" aria-hidden="true"></div><span class="atlas-corner atlas-corner-tl" aria-hidden="true"></span><span class="atlas-corner atlas-corner-br" aria-hidden="true"></span></div>' +
+      '<div class="atlas-toolbar"><nav class="atlas-regions" aria-label="选择沙盘区域"><button type="button" data-atlas-region="overview" aria-pressed="true">全景</button><button type="button" data-atlas-region="exploration" aria-pressed="false">勘探评价</button><button type="button" data-atlas-region="production" aria-pressed="false">开发生产</button><button type="button" data-atlas-region="midstream" aria-pressed="false">储运加工</button></nav>' +
+      '<div class="home-view-controls" role="group" aria-label="三维沙盘交互">' +
+      '<button type="button" data-home-action="tour" aria-pressed="false" disabled>自动导览</button>' +
       '<button type="button" data-home-action="interact" aria-pressed="false" disabled>进入交互</button>' +
       '<button type="button" data-home-action="out" aria-label="缩小井场" title="缩小" disabled>−</button>' +
       '<output class="home-zoom" aria-label="相对缩放">100%</output>' +
       '<button type="button" data-home-action="in" aria-label="放大井场" title="放大" disabled>＋</button>' +
-      '<button type="button" data-home-action="reset" disabled>复位视角</button></div>' +
+      '<button type="button" data-home-action="reset" disabled>复位视角</button></div></div>' +
       '<p class="home-view-help" id="home-view-help">拖拽旋转 · 进入交互后滚轮缩放 · 方向键调整视角</p>' +
-      '<div class="home-art-footer"><div class="home-art-key" aria-label="场景组成"><span><i aria-hidden="true"></i>地表井场</span><span><i aria-hidden="true"></i>井筒剖面</span><span><i aria-hidden="true"></i>目标地层</span></div>' +
+      '<div class="home-art-footer"><div class="home-art-key" aria-label="场景组成"><span><i aria-hidden="true"></i>勘探与评价</span><span><i aria-hidden="true"></i>开发与生产</span><span><i aria-hidden="true"></i>储运与加工</span></div>' +
       '<button class="home-motion" type="button" aria-pressed="false" aria-label="暂停首页动态效果"><i aria-hidden="true"></i><span>暂停动效</span></button></div></div></div>' +
       '<div class="wrap"><div class="tg-kpis home-kpis">' +
       '<div class="tg-kpi"><span class="tg-kpi-n mono roll" data-n="' + A.stages.length + '">' + A.stages.length + '</span><span class="tg-kpi-l">作业环节</span></div>' +
@@ -570,22 +540,14 @@
       '<div class="tg-kpi"><span class="tg-kpi-n mono roll" data-n="' + keys.length + '">' + keys.length + '</span><span class="tg-kpi-l">AI 技术方法</span></div>' +
       '</div></div></section>' +
 
-      '<section class="tg-sec home-drilling"><div class="wrap">' +
-      '<div class="tg-shead"><div class="tg-shead-l"><span class="kicker">01 / DRILLING</span><h2>钻井精选</h2>' +
-      '<p>调整参数，观察钻速、预警与井眼轨迹的变化。</p></div>' +
-      '<div class="home-section-meta"><div class="home-counts"><b>' + drilling.scenes.length + '</b><span>场景</span><b>' + drillingCases.length + '</b><span>案例</span></div>' +
-      '<a class="home-text-link" href="#/stage/drilling">查看全部场景 <span>↗</span></a></div></div>' +
-      '<div class="tg-feat rv">' + main + '<div class="tg-feat-side">' + small + '</div></div>' +
-      '<div class="home-section-foot"><span>示范用于理解算法，不代表现场验证结果。</span></div></div></section>' +
-
       '<section class="tg-sec home-chain"><div class="wrap">' +
-      '<div class="tg-shead"><div class="tg-shead-l"><span class="kicker">02 / PROCESS</span><h2>完整作业链</h2>' +
+      '<div class="tg-shead"><div class="tg-shead-l"><span class="kicker">01 / PROCESS</span><h2>完整作业链</h2>' +
       '<p>从勘探到加工，按作业顺序进入各环节。</p></div>' +
       '<a class="home-text-link" href="#/chain">打开作业链工作台 <span>↗</span></a></div>' +
       '<div class="rv">' + flowHTML('home') + '</div></div></section>' +
 
       '<section class="tg-sec home-methods"><div class="wrap">' +
-      '<div class="tg-shead"><div class="tg-shead-l"><span class="kicker">03 / AI METHODS</span><h2>技术用在哪里</h2>' +
+      '<div class="tg-shead"><div class="tg-shead-l"><span class="kicker">02 / AI METHODS</span><h2>技术用在哪里</h2>' +
       '<p>按方法浏览，或点击矩阵交点查看对应案例。</p></div></div>' +
       '<nav class="home-method-nav" aria-label="按 AI 方法浏览">' + methods + '</nav>' + matrixHTML() + '</div></section></main>';
   }
@@ -828,7 +790,7 @@
       '</div></div></div>' +
 
       drillingHighlightsHTML(st) + drillingStatisticsHTML(st) +
-      (st.id === 'drilling' && global.DrillingCinema ? global.DrillingCinema.html('drilling', false) : '') +
+      (st.id === 'drilling' && global.DrillingCinema ? global.DrillingCinema.html('drilling', false) : global.StageCinema ? global.StageCinema.html(st.id) : '') +
 
       '<div class="pgn">' + A.stages.map(function (x) {
         var on = x.id === st.id;
@@ -1040,6 +1002,7 @@
     if (b.lede) out += '<div class="lede-block"><span class="kicker plain">专业场景介绍</span><p>' + rich(b.lede) + '</p></div>';
     (b.sections || []).forEach(function (s, i) {
       out += K.sec4(i + 1, s.en || '', s.title, s.html || s.body || '');
+      if (i === 0 && global.CaseSolution) out += global.CaseSolution.html(global.CaseSolution.profile(c), 'guide');
     });
     return out;
   }
@@ -1051,6 +1014,7 @@
       '<h3 style="margin-top:10px">' + esc(w.title || '案例流程') + '</h3>' +
       (w.lead || []).map(function (p) { return '<p>' + rich(p) + '</p>'; }).join('') +
       '</div>' + (w.stats ? K.cells(w.stats) : '') + '</div>';
+    if (global.CaseSolution) out += global.CaseSolution.focus(global.CaseSolution.profile(c));
 
     /* 可选：流程全景图（案例包在 tabs.workflow.overview 里给 HTML/SVG 即渲染） */
     if (w.overview) {
@@ -1072,7 +1036,7 @@
   }
 
   function renderDemoShell(sc, c) {
-    return (sc.stageId === 'drilling' && global.DrillingCinema &&
+    return (c.id === 'welllog-layer' && global.CaseSolution ? global.CaseSolution.html(global.CaseSolution.profile(c), 'demo') : '') + (sc.stageId === 'drilling' && global.DrillingCinema &&
       (!global.DrillingCinema.hasScene || global.DrillingCinema.hasScene(sc.id)) ? global.DrillingCinema.html(sc.id, true) : '') + '<div class="lab">' +
       '<div class="lab-bar"><span class="lab-dots"><i></i><i></i><i></i></span>' +
       '<span class="lab-t mono">SANDBOX · 交互实验台 · 纯前端真实算法</span>' +
@@ -1142,6 +1106,7 @@
         p.classList.toggle('on', p.dataset.panel === key);
       });
       if (key === 'demo') mountDemo(sc, c);
+      if (key === 'demo' && global.CaseSolution) view.querySelectorAll('[data-case-solution="demo"]').forEach(function (el) { if (el.__caseSolution) el.__caseSolution.refresh(); });
       if (scroll) {
         var y = tabsEl.getBoundingClientRect().top + window.scrollY - 62;
         window.scrollTo({ top: y, behavior: scrollBehavior() });
@@ -1160,6 +1125,14 @@
 
     bindChecklist();
     bindFlowLinks();
+    if (global.CaseSolution) view.querySelectorAll('[data-case-solution]').forEach(function (el) {
+      var handle = global.CaseSolution.mount(el, { scope: function () { return document.getElementById('case-demo-root'); }, openDemo: function () {
+        activate('demo', false);
+        window.scrollTo({ top: tabsEl.getBoundingClientRect().top + window.scrollY - 62, behavior: 'instant' });
+        setHashQuiet('#/scene/' + sc.id + '?case=' + encodeURIComponent(c.id) + '&tab=demo');
+      } });
+      pageCleanups.push(function () { handle.destroy(); });
+    });
   }
 
   function bindFlowLinks() {
@@ -2058,6 +2031,13 @@
 
     if (p[0] === 'stage') bindFilters(view);
     if (p[0] === 'stage' && p[1] === 'drilling') mountDrillingCinema(view, 'drilling');
+    if (p[0] === 'stage' && p[1] !== 'drilling' && global.StageCinema) {
+      var stageCinema = view.querySelector('[data-stage-cinema]');
+      if (stageCinema) {
+        var stageCinemaHandle = global.StageCinema.mount(stageCinema);
+        pageCleanups.push(function () { stageCinemaHandle.destroy(); });
+      }
+    }
     if (p[0] === 'chain') bindChain(view);
     if (p[0] === 'cases') bindCases(view);
     if (p[0] === 'guide') bindGuide(view);

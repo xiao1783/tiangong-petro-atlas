@@ -2,59 +2,13 @@
 (function (global) {
   'use strict';
   var script = document.currentScript;
-  var rigURL = new URL('./home-rig-scene.js?v=20261027-interaction', script ? script.src : new URL('assets/core/home-hero.js', document.baseURI).href).href;
+  var rigURL = new URL('./home-atlas-scene.js?v=20261030-clear-view', script ? script.src : new URL('assets/core/home-hero.js', document.baseURI).href).href;
   var rigPromise = null;
 
   function scene() {
-    var grid = '', strata = '', stars = '';
-    var rock = [['#88745d', '#685b4c'], ['#b7a17a', '#8c795b'], ['#79746b', '#585750'], ['#baa47b', '#927d5b'], ['#605c55', '#454640'], ['#8c7866', '#665b50']];
-    for (var i = 1; i < 16; i++) {
-      var t = i / 16, x = 450 - 390 * t, y = 174 + 156 * t;
-      grid += '<path d="M' + x + ' ' + y + ' Q' + (x + 195) + ' ' + (y + 56 - Math.sin(t * 9) * 18) + ' ' + (x + 390) + ' ' + (y + 156) + '"/>';
-      grid += '<path d="M' + (450 + 390 * t) + ' ' + y + ' Q' + (255 + 390 * t) + ' ' + (y + 56 + Math.cos(t * 8) * 12) + ' ' + (60 + 390 * t) + ' ' + (y + 156) + '"/>';
-    }
-    for (var j = 0; j < 6; j++) {
-      var d = j * 25;
-      strata += '<path d="M60 ' + (330 + d) + ' Q250 ' + (375 + d) + ' 450 ' + (486 + d) + ' L450 ' + (511 + d) + ' Q240 ' + (399 + d) + ' 60 ' + (355 + d) + 'Z" fill="' + rock[j][0] + '"/>';
-      strata += '<path d="M450 ' + (486 + d) + ' Q650 ' + (407 + d) + ' 840 ' + (330 + d) + ' L840 ' + (355 + d) + ' Q640 ' + (439 + d) + ' 450 ' + (511 + d) + 'Z" fill="' + rock[j][1] + '"/>';
-    }
-    for (var k = 0; k < 28; k++) {
-      stars += '<circle cx="' + (60 + k * 113 % 790) + '" cy="' + (30 + k * 71 % 520) + '" r="' + (k % 4 ? 1 : 1.8) + '" opacity="' + (.15 + k % 4 * .12) + '"/>';
-    }
-    return '<svg class="home-scene" viewBox="0 0 900 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hs-title hs-desc">' +
-      '<title id="hs-title">智能钻井 · 从地表到储层</title><desc id="hs-desc">土褐色地表、砂岩与灰褐色岩层，钢灰色井架与金属井筒延伸至储层。淡金色流动光线表示数据连接，仅作概念示意。</desc>' +
-      '<defs>' +
-      '<linearGradient id="hs-top" x2="1" y2="1"><stop stop-color="#766a55"/><stop offset=".5" stop-color="#9b896c"/><stop offset="1" stop-color="#746851"/></linearGradient>' +
-      '<linearGradient id="hs-steel"><stop stop-color="#5a676e"/><stop offset=".45" stop-color="#b8c0bf"/><stop offset=".7" stop-color="#8d999b"/><stop offset="1" stop-color="#52636c"/></linearGradient>' +
-      '<radialGradient id="hs-aura"><stop stop-color="#a8b2a1" stop-opacity=".16"/><stop offset="1" stop-color="#a8b2a1" stop-opacity="0"/></radialGradient>' +
-      '<linearGradient id="hs-scan" x2="0" y2="1"><stop stop-color="#b9e3dc" stop-opacity="0"/><stop offset="1" stop-color="#b9e3dc" stop-opacity=".1"/></linearGradient>' +
-      '</defs>' +
-      '<g class="hs-stars" fill="#54848a">' + stars + '</g>' +
-      '<ellipse cx="460" cy="360" rx="420" ry="290" fill="url(#hs-aura)"/>' +
-      '<g fill="none" stroke="#55a5ac" stroke-width=".7" opacity=".34"><ellipse cx="450" cy="383" rx="425" ry="180"/><ellipse cx="450" cy="383" rx="398" ry="167" stroke-dasharray="2 11"/><path d="M450 32V687 M18 383H886" stroke-dasharray="3 9"/></g>' +
-      '<g stroke="#d1bd9a" stroke-opacity=".28" stroke-width=".8">' + strata + '</g>' +
-      '<path d="M60 430 Q250 475 450 586 Q650 507 840 430 L840 442 Q650 519 450 598 Q250 487 60 442Z" fill="#d6c29a" opacity=".38"/>' +
-      '<path d="M60 330L450 174 840 330 450 486Z" fill="url(#hs-top)" stroke="#c1ae8f" stroke-opacity=".65"/>' +
-      '<g fill="none" stroke="#d6cbb3" stroke-width=".7" opacity=".22">' + grid + '</g>' +
-      '<g class="hs-scan" fill="url(#hs-scan)" stroke="#b9e3dc" stroke-opacity=".25"><path d="M170 302L450 190 730 302 450 414Z"/></g>' +
-      '<g fill="none" stroke="#b0b3ab" stroke-width="1"><path d="M320 323L450 271 580 323 450 375Z"/><path d="M336 323L450 278 564 323 450 369Z" stroke-dasharray="4 5"/></g>' +
-      '<g fill="none" stroke="url(#hs-steel)" stroke-linejoin="round"><path d="M392 321L438 94H462L508 321M405 316L442 105M495 316L458 105" stroke-width="4"/>' +
-      '<path d="M397 295H503L406 253H494L415 210H485L424 166H476L432 126H468" stroke-width="2"/>' +
-      '<path d="M406 253L503 295M415 210L494 253M424 166L485 210M432 126L476 166" stroke-width="1.4"/>' +
-      '<path d="M450 94V320M435 84H465M435 80V98M465 80V98" stroke-width="2"/></g>' +
-      '<path d="M377 321L450 292 523 321 450 350Z" fill="#4e5558" stroke="#b3b9b8" stroke-width="1.4"/>' +
-      '<g stroke="#dfbc71" stroke-width=".8"><path d="M300 302V279L346 261 373 272V295L326 314Z" fill="#b68b3e"/><path d="M300 279L346 261 373 272 326 291Z" fill="#d5ad5c"/><path d="M326 291L373 272V295L326 314Z" fill="#927035"/></g>' +
-      '<g stroke="#bd8b79" stroke-width=".8"><path d="M539 305V284L582 267 609 278V299L566 316Z" fill="#9d5e4c"/><path d="M539 284L582 267 609 278 566 295Z" fill="#b77860"/><path d="M566 295L609 278V299L566 316Z" fill="#774c41"/></g>' +
-      '<path d="M450 321V515Q450 561 496 542L724 450" fill="none" stroke="#20282c" stroke-width="14"/>' +
-      '<path d="M450 321V515Q450 561 496 542L724 450" fill="none" stroke="#b9bfc0" stroke-width="8"/>' +
-      '<path class="hs-flow" d="M450 321V515Q450 561 496 542L724 450" fill="none" stroke="#fff1c7" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 42"/>' +
-      '<g transform="translate(724 450)"><circle class="hs-beacon" r="16" fill="none" stroke="#eac784"/><circle r="5" fill="#ffe4a4"/></g>' +
-      '<g class="hs-data-lines" fill="none" stroke="#0b6f70" stroke-width="1.3"><path class="hs-data" d="M195 360L314 407 390 377" stroke-dasharray="3 12"/><path class="hs-data" d="M511 366L622 410 760 354" stroke-dasharray="3 12"/></g>' +
-      '<g class="hs-nodes" fill="#0d8580"><circle cx="195" cy="360" r="3"/><circle cx="760" cy="354" r="3"/><circle cx="450" cy="84" r="4"/></g>' +
-      '<g class="hs-leaders" fill="none" stroke="#728a90" stroke-width=".8"><path d="M470 126H590L615 106H740"/><path d="M729 450H788L808 430H862"/><path d="M190 494H123L103 514H48"/></g>' +
-      '<rect class="hs-label-backplate" x="668" y="407" width="176" height="20" rx="3" fill="#f4f8fb" fill-opacity=".9"/>' +
-      '<g class="hs-labels" font-family="monospace" font-size="10" letter-spacing="2" fill="#243f4b"><text x="620" y="96">SURFACE / 地表</text><text x="676" y="420">TRAJECTORY / 井轨迹</text><text x="50" y="538">FORMATION / 地层</text></g>' +
-      '<g class="hs-footer" font-family="monospace" font-size="9" letter-spacing="2" fill="#526b79"><text x="450" y="684" text-anchor="middle">GEOLOGY → DATA → INTELLIGENCE</text></g></svg>';
+    var layers = '', colors = ['#887458','#a08b67','#62675e','#9a865f','#6b725f','#4c5855'];
+    colors.forEach(function (c,i) { layers += '<path d="M70 '+(335+i*22)+'L640 '+(390+i*22)+' 1260 '+(320+i*22)+'V'+(344+i*22)+'L640 '+(414+i*22)+' 70 '+(359+i*22)+'Z" fill="'+c+'"/>'; });
+    return '<svg class="home-scene" viewBox="0 0 1320 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hs-title hs-desc"><title id="hs-title">石油全流程静态概念沙盘</title><desc id="hs-desc">勘探采集、井场与注采、储运与炼化连接在同一地层剖面中。三维渲染不可用时展示此静态图，环节入口仍可使用。</desc><rect width="1320" height="600" fill="var(--ex-night,#f4f8fb)"/>'+layers+'<path d="M70 335L650 270 1260 320 640 390Z" fill="#69715b"/><g stroke="#bdc5bd" fill="none" stroke-width="4"><path d="M507 338L545 135h20l38 203M518 285h75L528 230h54l-44-50h34M528 230l65 55M552 137v204"/><path d="M800 335l30-65 30 65m-48-65h65m-4-10v80"/><path d="M1045 323V180h40v143m-32-120h24m-24 35h24m-24 35h24M1120 325V210h28v115"/></g><g fill="#9cafb6"><path d="M930 308v-50h65v50Zm0-50q32-25 65 0Z"/><path d="M1170 310v-45h62v45Zm0-45q31-22 62 0Z"/></g><path d="M110 315l80-90 60 44 50-55 93 99Z" fill="#9a896b"/><path d="M150 324h180" stroke="#91bdc7" stroke-dasharray="5 12" stroke-width="4"/><path d="M550 340v112q10 38 80 24h90" fill="none" stroke="#edc27d" stroke-width="7"/><path d="M860 333h100l30-30h185" fill="none" stroke="#d5b47b" stroke-width="5"/><g font-family="system-ui,Microsoft YaHei,sans-serif" font-size="19" fill="var(--ex-white,#173443)"><text x="165" y="170">勘探与评价</text><text x="695" y="210">开发与生产</text><text x="1030" y="130">储运与加工</text></g><text x="660" y="565" text-anchor="middle" fill="var(--ex-muted,#526b79)" font-size="14" font-family="system-ui">全流程概念示意 · 当前为静态展示</text></svg>';
   }
 
   function bind(root) {
@@ -69,7 +23,15 @@
     var poster = hero.querySelector('.home-scene');
     var media = global.matchMedia('(prefers-reduced-motion: reduce)');
     var paused = false, visible = true, disposed = false, engine = null;
-    var interactive = false, zoom = 1, pointer = null, cleanups = [];
+    var interactive = false, zoom = 1, pointer = null, cleanups = [], touring = false;
+    function showRegion(id) {
+      if (['overview','exploration','production','midstream'].indexOf(id) < 0) return;
+      art.setAttribute('data-region', id);
+      [].forEach.call(hero.querySelectorAll('[data-atlas-region]'), function (node) {
+        node.setAttribute('aria-pressed', String(node.getAttribute('data-atlas-region') === id));
+      });
+      if (global.I18N) global.I18N.apply(art);
+    }
     function listen(target, type, handler, options) {
       if (!target) return;
       target.addEventListener(type, handler, options);
@@ -84,9 +46,10 @@
           control.setAttribute('aria-pressed', String(interactive));
           control.textContent = interactive ? '退出交互' : '进入交互';
         }
+        if (action === 'tour') { control.setAttribute('aria-pressed', String(touring)); control.textContent = touring ? '停止导览' : '自动导览'; control.disabled = !engine || media.matches; }
       });
       if (zoomLabel) zoomLabel.textContent = Math.round(zoom * 100) + '%';
-      if (help) help.textContent = !engine ? (art && art.getAttribute('data-renderer') === 'fallback' ? '当前为静态井场示意' : '三维场景准备中…') : interactive
+      if (help) help.textContent = !engine ? (art && art.getAttribute('data-renderer') === 'fallback' ? '当前为全流程静态示意' : '三维场景准备中…') : interactive
         ? '交互中：拖拽旋转 · 滚轮缩放 · Esc 退出'
         : '拖拽旋转 · 进入交互后滚轮缩放 · 方向键调整视角';
     }
@@ -125,7 +88,7 @@
       art.setAttribute('data-renderer', 'fallback');
       if (poster) poster.removeAttribute('aria-hidden');
       setInteractive(false);
-      if (help) help.textContent = '当前为静态井场示意';
+      if (help) help.textContent = '当前为全流程静态示意';
     }
     function toggle() { paused = !paused; sync(); }
     listen(button, 'click', toggle);
@@ -133,26 +96,31 @@
     listen(media, 'change', sync);
     listen(global, 'tiangong-theme-change', theme);
     listen(host, 'home-rig-error', fallback);
+    listen(host, 'atlas-region-change', function (event) { touring = !!event.detail.tour; zoom = 1; showRegion(event.detail.id); syncControls(); });
     listen(art, 'click', function (event) {
+      var regionButton = event.target.closest('[data-atlas-region]');
+      if (regionButton && engine && engine.focusRegion) { engine.focusRegion(regionButton.getAttribute('data-atlas-region')); return; }
       var control = event.target.closest('[data-home-action]');
       if (!control || control.disabled || !engine) return;
       var action = control.getAttribute('data-home-action');
       if (action === 'interact') setInteractive(!interactive);
       else if (action === 'in' || action === 'out') scale(action === 'in' ? 1.15 : 1 / 1.15);
       else if (action === 'reset') { engine.resetView(); zoom = 1; syncControls(); }
+      else if (action === 'tour' && engine.setTour) { if (paused) paused = false; engine.setTour(!touring); sync(); }
     });
     listen(viewport, 'pointerdown', function (event) {
-      if (!engine || event.button !== 0 || pointer || (event.pointerType === 'touch' && !interactive)) return;
+      if (!engine || event.button !== 0 || pointer || (event.target && event.target.closest && event.target.closest('button')) || (event.pointerType === 'touch' && !interactive)) return;
       setInteractive(true); viewport.focus({ preventScroll: true });
-      pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
+      pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, startX: event.clientX, startY: event.clientY, moved: false };
       viewport.setPointerCapture(event.pointerId); viewport.classList.toggle('is-dragging', true);
     });
     listen(viewport, 'pointermove', function (event) {
       if (!pointer || pointer.id !== event.pointerId || !engine) return;
+      if (Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) > 5) pointer.moved = true;
       engine.rotate((event.clientX - pointer.x) * -.006, (event.clientY - pointer.y) * .004);
       pointer.x = event.clientX; pointer.y = event.clientY;
     });
-    listen(viewport, 'pointerup', endPointer);
+    listen(viewport, 'pointerup', function (event) { if (pointer && !pointer.moved && engine && engine.pick) engine.pick(event.clientX, event.clientY); endPointer(event); });
     listen(viewport, 'pointercancel', endPointer);
     listen(viewport, 'lostpointercapture', endPointer);
     listen(viewport, 'wheel', function (event) {

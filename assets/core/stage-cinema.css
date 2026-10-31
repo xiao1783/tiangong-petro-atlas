@@ -1,0 +1,17 @@
+/* 文字留在模型之外，避免遮挡设备。展厅沿用钻井专题的字体与控件。 */
+.stage-cinema .dc-viewport{height:620px}
+.stage-cinema .dc-heading{position:relative;padding-bottom:8px;min-height:110px}
+.stage-cinema .dc-vignette{opacity:.28}
+.stage-cinema .dc-status{bottom:10px}
+.stage-cinema .sc-caption{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:0 28px 20px}
+.sc-shot{display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.sc-shot>b{font-size:21px;font-weight:500;color:var(--dc-ink)}
+.sc-shot>small{font-size:11px;line-height:1.6;color:var(--dc-muted)}
+.sc-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:10px;color:var(--dc-muted)}
+.sc-legend span{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.sc-legend i{width:7px;height:7px;border-radius:50%;background:#778a92}.sc-legend .sc-color-1{background:#bc934e}.sc-legend .sc-color-2{background:#147e8a}
+.sc-question{margin:0;padding:13px 28px 17px;border-top:1px solid var(--dc-line);font-size:11px;line-height:1.9;color:var(--dc-muted);background:var(--dc-panel)}
+.sc-fallback{position:absolute;inset:15% 10%;padding:28px;border:1px solid var(--dc-line);border-radius:12px;display:flex;flex-direction:column;justify-content:center;gap:22px}
+.sc-fallback>b{font-size:25px;color:var(--dc-ink)}.sc-fallback ol{display:flex;gap:20px;margin:0;padding-left:18px;justify-content:space-between}.sc-fallback li{font-size:13px;line-height:1.8;padding:10px}.sc-fallback p{font-size:12px;line-height:1.8}
+.stage-cinema[data-state="ready"] .sc-fallback{display:none}
+@media(max-width:760px){.stage-cinema .dc-viewport{height:420px}.stage-cinema .dc-heading{min-height:125px}.stage-cinema .sc-caption{padding:0 18px 18px;align-items:flex-start;flex-direction:column;gap:13px}.sc-shot{gap:10px}.sc-shot>b{font-size:18px}.sc-shot>small{flex-basis:100%}.sc-legend{gap:13px;font-size:9px}.stage-cinema .dc-cameras{flex-wrap:wrap;justify-content:flex-start;gap:4px}.stage-cinema .dc-cameras button{padding:9px 8px;font-size:10px}.sc-question{padding:12px 18px;font-size:10px}.sc-fallback{inset:8%;padding:18px}.sc-fallback ol{flex-direction:column;gap:0}.sc-fallback>b{font-size:20px}}

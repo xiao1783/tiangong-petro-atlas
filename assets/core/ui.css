@@ -303,6 +303,8 @@ table.matrix tfoot th{text-align:left;padding-left:16px;font-size:10.8px;letter-
 .research-prep h4{margin-bottom:8px}
 .research-prep .checklist{margin-top:14px}
 .research-prep .cl-t,.research-prep .cl-s{display:block}
+.figure:has(> .service-flow){overflow-x:auto;overscroll-behavior-x:contain}
+.figure > .service-flow{display:block;width:100%;min-width:620px;height:auto;background:var(--card)}
 .research-prep .cl-head{flex-wrap:wrap;gap:8px 16px}
 .research-prep .cl-item{grid-template-columns:22px minmax(0,1fr) minmax(140px,230px)}
 .research-prep .cl-n{font-family:var(--sans);font-size:12px;letter-spacing:0;line-height:1.65}
@@ -1652,7 +1654,6 @@ html.hx-seen .hx-draw{animation:none}
   border-radius:0 2px 2px 0;box-shadow:0 0 8px var(--jade-a35)}
 
 /* ---- A2 回到顶部：进度环（stroke-dashoffset 由 shell.js 按滚动比例驱动） ---- */
-.to-top{position:relative}
 .to-top .tt-ring{position:absolute;inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);pointer-events:none}
 .to-top .tt-ring circle{transition:stroke-dashoffset .1s linear}
 
