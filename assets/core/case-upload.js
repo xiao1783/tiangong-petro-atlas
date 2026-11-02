@@ -1,5 +1,5 @@
 /* =========================================================
-   案例包导入 Case Import（v2：多文件 / 文件夹）
+   案例包导入 Case Import（v2：多文件 / 文件夹 / ZIP、RAR、7z）
    ---------------------------------------------------------
    一个「案例包」= 一个文件夹，最少一个清单，其余随便：
 
@@ -663,7 +663,7 @@
     '怎么用：',
     '',
     '  1. 解压这个包，用编辑器改 case.json 里的 id / sceneId / title 和两块正文。',
-    '  2. 打开网站首页右上角「＋ 添加案例」，把 my-case 整个文件夹拖进弹窗。',
+    '  2. 打开网站首页右上角「＋ 添加案例」，拖入案例文件夹，或点「选择压缩包」上传 ZIP、RAR 或 7z。',
     '  3. 右侧会逐项校验，红色错误改完再提交。',
     '',
     '示范的两种写法：',
@@ -845,7 +845,7 @@
       '<div class="mdl-b">' +
       '<ol class="imp-flow">' +
       '<li><b>01</b><span>下载模板，改内容与示范</span></li>' +
-      '<li><b>02</b><span>拖入整个案例文件夹</span></li>' +
+      '<li><b>02</b><span>选择案例文件夹或压缩包</span></li>' +
       '<li><b>03</b><span>校验通过后添加</span></li>' +
       '</ol>' +
 
@@ -855,12 +855,14 @@
       '<div class="imp-drop" id="imp-drop">' +
       '<input type="file" id="imp-file" multiple hidden>' +
       '<input type="file" id="imp-dir" webkitdirectory directory multiple hidden>' +
+      '<input type="file" id="imp-zip" accept=".zip,.rar,.7z,application/zip,application/x-rar-compressed,application/vnd.rar,application/x-7z-compressed" hidden>' +
       '<span class="imp-ic">↑</span>' +
-      '<b>拖入案例文件夹，或点击选择</b>' +
-      '<span class="imp-sub">清单 case.json + 示范页 + 脚本 + 素材，上限 6 MB。推荐把整个文件夹<b>直接拖进虚线框</b>；若点按钮弹出的仍是文件选择框（浏览器不支持选文件夹），可点「选择文件」后 Ctrl+A 全选包内文件</span>' +
+      '<b>拖入案例文件夹或 ZIP / RAR / 7z 压缩包，或点击选择</b>' +
+      '<span class="imp-sub">清单 case.json + 示范页 + 脚本 + 素材。ZIP、RAR、7z 无需手动解压，每包一个案例，解压前后均不超过 6 MB；也可选择文件夹或全选包内文件。</span>' +
       '<span class="imp-choose">' +
       '<button class="btn sm" id="imp-pick-files" type="button">选择文件</button>' +
       '<button class="btn sm ghost" id="imp-pick-dir" type="button">选择文件夹</button>' +
+      '<button class="btn sm ghost" id="imp-pick-zip" type="button">选择压缩包</button>' +
       '</span>' +
       '</div>' +
 
@@ -1012,16 +1014,29 @@
 
     if (S.loading) return;
     S.loading = true;
+    q('#imp-ok').disabled = true;
     tip('正在读取 ' + files.length + ' 个文件…', '');
 
-    Promise.all(files.map(readOne)).then(function (arrs) {
+    Promise.resolve().then(function () {
+      var archives = files.filter(function (f) { return /\.(zip|rar|7z)$/i.test(f.name); });
+      if (!archives.length) return files;
+      if (files.length !== 1) throw new Error('请一次选择一个压缩案例包，不要与其他文件混选。');
+      tip('正在解压「' + files[0].name + '」…', '');
+      return global.CaseArchive.read(files[0], MAX_TOTAL);
+    }).then(function (items) {
+      return Promise.all(items.map(readOne));
+    }).then(function (arrs) {
       S.loading = false;
+      q('#imp-ok').disabled = false;
       stripRoot(arrs);
       adopt(arrs);
     }).catch(function (e) {
       S.loading = false;
+      q('#imp-ok').disabled = false;
+      S.pkg = null; S.manifest = null; S.files = []; S.raw = [];
+      paintFiles();
       paintResults([{ level: 'error', msg: '读取文件失败', hint: e.message }]);
-      tip('读取失败，换一个文件夹再试', 'is-err');
+      tip('读取失败：' + e.message, 'is-err');
     });
   }
 
@@ -1164,6 +1179,7 @@
 
   /* ---- 提交 ---- */
   function commit() {
+    if (S.loading) return;
     var meta = metaNow();
     var list = checkAll(S.pkg, meta, S.files);
     paintResults(list);
@@ -1198,7 +1214,7 @@
       if (e.target.closest('[data-close]')) { close(); }
     });
 
-    var drop = q('#imp-drop'), fileIn = q('#imp-file'), dirIn = q('#imp-dir');
+    var drop = q('#imp-drop'), fileIn = q('#imp-file'), dirIn = q('#imp-dir'), zipIn = q('#imp-zip');
 
     /* 有些环境（国产浏览器兼容模式等）解析 innerHTML 时会丢非标准属性，
        或压根不支持 webkitdirectory —— 弹出的仍是普通文件框。这里补一次属性，
@@ -1271,6 +1287,7 @@
        双保险：① 输入框层面拦截冒泡；② 虚线框只响应真实用户点击。 */
     fileIn.addEventListener('click', function (e) { e.stopPropagation(); });
     dirIn.addEventListener('click', function (e) { e.stopPropagation(); });
+    zipIn.addEventListener('click', function (e) { e.stopPropagation(); });
     drop.addEventListener('click', function (e) {
       if (!e.isTrusted) return;
       if (e.target.closest('.btn')) return;
@@ -1279,9 +1296,11 @@
     });
     q('#imp-pick-files').addEventListener('click', function (e) { e.stopPropagation(); fileIn.click(); });
     q('#imp-pick-dir').addEventListener('click', function (e) { e.stopPropagation(); pickDir(); });
+    q('#imp-pick-zip').addEventListener('click', function (e) { e.stopPropagation(); zipIn.click(); });
 
     fileIn.addEventListener('change', function () { loadFiles(fileIn.files); fileIn.value = ''; });
     dirIn.addEventListener('change', function () { loadFiles(dirIn.files); dirIn.value = ''; });
+    zipIn.addEventListener('change', function () { loadFiles(zipIn.files); zipIn.value = ''; });
 
     ['dragenter', 'dragover'].forEach(function (ev) {
       drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('on'); });

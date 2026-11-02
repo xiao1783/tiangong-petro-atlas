@@ -1733,7 +1733,7 @@
       '<p>先判断你要做哪一种：只讲清楚「业务问题 + 技术方案」，用上传包就够了；需要让人在浏览器里拖动参数、看到算法实时出结果，才写插件。</p>' +
       '<div class="tg-ways">' +
       '<div class="tg-way"><div class="t">PATH A · 推荐</div><h4>上传案例包</h4>' +
-      '<p>一个文件夹：<code>case.json</code> 清单 + 任意演示文件。HTML 会自动内联 CSS/JS，图片转为内嵌资源，双击也能跑。</p>' +
+      '<p>一个文件夹或 ZIP / RAR / 7z 压缩包：<code>case.json</code> 清单 + 演示文件。点「选择压缩包」即可直接导入同学提交的 ZIP、RAR、7z，无需手动解压；每包一个案例，解压前后均不超过 6 MB。HTML 会自动内联 CSS/JS，图片转为内嵌资源。</p>' +
       '<div class="acts"><button class="btn sm primary" data-import>＋ 打开「添加案例」</button>' +
       '<button class="btn sm" data-dl-template>↓ 下载模板 zip</button></div></div>' +
       '<div class="tg-way"><div class="t">PATH B · 需要真实演示时</div><h4>写一个案例插件</h4>' +
