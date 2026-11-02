@@ -141,7 +141,7 @@ html[data-theme="dark"] .home-scene .hs-data-lines{stroke:#79d9cf}
 @keyframes home-scan{0%,100%{transform:translateY(-14px);opacity:.3}50%{transform:translateY(14px);opacity:.9}}
 @keyframes home-beacon{0%{transform:scale(.65);opacity:.8}100%{transform:scale(2.2);opacity:0}}
 @keyframes home-enter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.home-copy{animation:home-enter .85s cubic-bezier(.2,.65,.3,1) both}
+.home-copy{animation:home-enter .35s cubic-bezier(.2,.65,.3,1) both}
 .home-scene .hs-flow{animation:home-flow 4s linear infinite}
 .home-scene .hs-data{animation:home-flow 7s linear infinite}
 .home-scene .hs-scan{animation:home-scan 8s ease-in-out infinite}

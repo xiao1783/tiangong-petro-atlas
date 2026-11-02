@@ -6,7 +6,7 @@
 .home-atlas .home-art-label b{font-size:12px}
 .atlas-concept{font-size:9px;color:var(--ex-muted)}
 .home-atlas .home-scene-stage{height:clamp(420px,42vw,540px);border-radius:16px;overflow:hidden;background:var(--ex-night);box-shadow:0 12px 36px -28px #17344320}
-.home-atlas .home-rig-host{transition:opacity .8s ease}
+.home-atlas .home-rig-host{transition:opacity .18s ease}
 .atlas-vignette{display:none}
 .atlas-corner{position:absolute;z-index:3;width:20px;height:20px;pointer-events:none;border-color:color-mix(in srgb,var(--ex-teal) 25%,transparent);border-style:solid}
 .atlas-corner-tl{top:16px;left:16px;border-width:1px 0 0 1px}.atlas-corner-br{bottom:16px;right:16px;border-width:0 1px 1px 0}

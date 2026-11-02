@@ -13,13 +13,17 @@
 
 <link rel="icon" type="image/png" href="assets/logo-favicon.png">
 <link rel="apple-touch-icon" href="assets/logo.png">
+<!-- 首屏三维资源提前并行获取，避免等案例脚本执行后再逐级请求依赖。 -->
+<link rel="modulepreload" href="assets/core/home-atlas-scene.js?v=20261030-clear-view">
+<link rel="modulepreload" href="assets/vendor/three/three.module.js">
+<link rel="modulepreload" href="assets/vendor/three/three.core.js">
 <script src="assets/core/theme.js?v=20261026-themes"></script>
 <link rel="stylesheet" href="assets/core/tokens.css?v=20261026-themes">
 <link rel="stylesheet" href="assets/core/layout.css?v=20261027v10">
 <link rel="stylesheet" href="assets/core/ui.css?v=20261030-scroll-fix">
 <link rel="stylesheet" href="assets/core/v9.css?v=20261026-themes">
-<link rel="stylesheet" href="assets/core/home.css?v=20261030-overview">
-<link rel="stylesheet" href="assets/core/home-atlas.css?v=20261030-clear-view">
+<link rel="stylesheet" href="assets/core/home.css?v=20261102-fast-entry">
+<link rel="stylesheet" href="assets/core/home-atlas.css?v=20261102-fast-entry">
 <link rel="stylesheet" href="assets/core/figures-dark.css?v=20261027-diagrams">
 <link rel="stylesheet" href="assets/core/drilling-cinema.css?v=20261027-cinema">
 <link rel="stylesheet" href="assets/core/stage-cinema.css?v=20261030-field">
